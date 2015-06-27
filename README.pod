@@ -1,0 +1,21 @@
+=head1 NAME
+
+Asset::Pack - Easily pack assets into perl modules that can be fatpacked
+
+=head1 WHY?
+
+Because I had to write it anyway to make L<DB::Crud> be deployable as a script
+
+I'm using it to embed templates, javascript and css inside modules which are then
+fatpacked into a single script. It's a horrible hack, caveat emptor etc.
+
+=head1 SHOULD I USE THIS?
+
+Probably not. It's really not designed to be used except for in fatpacked scripts
+If you don't know what a fatpacked script is, you really shouldn't.
+
+=head1 LICENSE
+
+This software is copyright (c) 2015 by James Laver on time generously donated by Anomalio.
+
+This is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
