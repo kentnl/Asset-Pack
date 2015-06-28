@@ -37,8 +37,9 @@ sub module_rel_path {
 }
 
 sub module_full_path {
-  my ($module, $libdir) = @_;
-  return path($libdir)->child(module_rel_path($module));
+  my ( $module, $libdir ) = @_;
+  $libdir = './lib' if not defined $libdir;
+  return path($libdir)->child( module_rel_path($module) );
 }
 
 sub pack_asset {
