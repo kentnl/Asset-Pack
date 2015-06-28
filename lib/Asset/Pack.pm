@@ -6,6 +6,8 @@ use MIME::Base64;
 
 our $VERSION = '0.000001';
 
+# ABSTRACT: Easily pack assets into perl modules that can be fatpacked
+
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
@@ -55,10 +57,6 @@ sub unpack_asset {
 
 1;
 __END__
-
-=head1 NAME
-
-Asset::Pack - Easily pack assets into perl modules that can be fatpacked
 
 =head1 SYNOPSIS
 

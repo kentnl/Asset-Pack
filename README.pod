@@ -4,7 +4,7 @@
 
 =head1 NAME
 
-Asset::Pack
+Asset::Pack - Easily pack assets into perl modules that can be fatpacked
 
 =head1 VERSION
 
@@ -16,10 +16,6 @@ version 0.000001
     use Asset::Pack;
     # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
     write_module('assets/foo.js' 'MyApp::Asset::FooJS' 'lib');
-
-=head1 NAME
-
-Asset::Pack - Easily pack assets into perl modules that can be fatpacked
 
 =head1 WHY?
 
