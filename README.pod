@@ -1,3 +1,22 @@
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+Asset::Pack
+
+=head1 VERSION
+
+version 0.000001
+
+=head1 SYNOPSIS
+
+    #!/usr/bin/env perl
+    use Asset::Pack;
+    # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
+    write_module('assets/foo.js' 'MyApp::Asset::FooJS' 'lib');
+
 =head1 NAME
 
 Asset::Pack - Easily pack assets into perl modules that can be fatpacked
@@ -14,8 +33,56 @@ fatpacked into a single script. It's a horrible hack, caveat emptor etc.
 Probably not. It's really not designed to be used except for in fatpacked scripts
 If you don't know what a fatpacked script is, you really shouldn't.
 
-=head1 LICENSE
+=head1 NOTES
+
+Generated files are dependent on the Asset::Pack module. I might remove this dep in future
+but it's not a concern for me for the project I wrote this for. Patches welcome.
+
+=head1 FUNCTIONS
+
+=head2 module_rel_path(module) -> file_path (string)
+
+Turns a module name (e.g. 'Foo::Bar') into a file path relative to a library directory root
+
+=head2 module_full_path(module, libdir) -> file_path (string)
+
+Turns a module name and a library directory into a file path
+
+=head2 pack_asset($module, $path) -> byte_string
+
+Given a module name and the path of an asset to be packed, returns the new module with the
+content packed into the data section
+
+=head2 write_module($source, $module, $libdir)
+
+Given a source asset path, a module name and a library directory, packs the source into a module
+named C<$module> and saves it in the right place relative to C<$libdir>
+
+See 'synopsis' and try it out!
+
+=head2 unpack_asset(FH) -> byte_string
+
+FH is assumed to be DATA. Please pass in DATA
+
+=head1 AUTHORS
+
+=over 4
+
+=item *
+
+James Laver
+
+=item *
+
+Kent Fredric <kentnl@cpan.org>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2015 by James Laver on time generously donated by Anomalio.
 
-This is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
