@@ -32,9 +32,9 @@ sub module_full_path {
 }
 
 sub pack_asset {
-  my ($module, $path) = @_;
-  my $content = encode_base64(path($path)->slurp_raw);
-  return <<EOF;
+  my ( $module, $path ) = @_;
+  my $content = encode_base64( path($path)->slurp_raw );
+  return <<"EOF";
 package $module;
 use Asset::Pack;
 our \$content = unpack_asset;
