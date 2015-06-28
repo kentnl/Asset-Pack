@@ -4,6 +4,8 @@ use v5.10;
 use Path::Tiny;
 use MIME::Base64;
 
+our $VERSION = '0.000001';
+
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
