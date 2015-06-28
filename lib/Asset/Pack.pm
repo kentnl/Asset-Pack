@@ -1,6 +1,6 @@
 package Asset::Pack;
 
-use v5.10;
+use 5.010000;
 use Path::Tiny;
 use MIME::Base64;
 
