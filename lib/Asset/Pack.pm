@@ -109,9 +109,3 @@ See 'synopsis' and try it out!
 =head2 unpack_asset(FH) -> byte_string
 
 FH is assumed to be DATA. Please pass in DATA
-
-=head1 LICENSE
-
-This software is copyright (c) 2015 by James Laver
-
-This is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
