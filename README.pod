@@ -16,6 +16,9 @@ version 0.000001
     use Asset::Pack;
     # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
     write_module('assets/foo.js','MyApp::Asset::FooJS','lib');
+    # Or better still, this discovers them all and namespaces under MyApp::Asset
+    find_and_pack('assets', 'MyApp::Asset");
+    # It also writes MyApp::Asset which is an index file
 
 =head1 DESCRIPTION
 
@@ -29,6 +32,9 @@ inherently not fat-pack friendly.
 However, if you need embedded, single-file applications, aggregating not only
 Perl Modules, but templates, JavaScript and CSS, this tool will make some of
 your work easier.
+
+If anything fails it throws an exception. This is meant for scripts that will be tended by
+a human (or analysed if it fails as part of a build).
 
 =head1 FUNCTIONS
 
