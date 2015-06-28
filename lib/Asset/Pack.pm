@@ -1,6 +1,9 @@
+use 5.010000;
+use strict;
+use warnings;
+
 package Asset::Pack;
 
-use 5.010000;
 use Path::Tiny;
 use MIME::Base64;
 
@@ -49,7 +52,10 @@ sub write_module {
 
 sub unpack_asset {
   my $caller = caller;
-  my $fh = \*{"${caller}::DATA"};
+  my $fh     = do {
+    no strict 'refs';
+    \*{"${caller}::DATA"};
+  };
   my $content = join("", $fh->getlines);
   $content =~ s/\s+//g;
   return decode_base64($content);
