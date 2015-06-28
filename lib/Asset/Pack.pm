@@ -4,8 +4,8 @@ use warnings;
 
 package Asset::Pack;
 
-use Path::Tiny;
-use MIME::Base64;
+use Path::Tiny qw( path );
+use MIME::Base64 qw( encode_base64 decode_base64 );
 
 our $VERSION = '0.000001';
 
