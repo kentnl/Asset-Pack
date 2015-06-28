@@ -65,17 +65,18 @@ __END__
     # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
     write_module('assets/foo.js' 'MyApp::Asset::FooJS' 'lib');
 
-=head1 WHY?
+=head1 DESCRIPTION
 
-Because I had to write it anyway to make L<DB::Crud> be deployable as a script
+This module allows you to construct installable and fat-packable perl modules
+representing the content of arbitrary files.
 
-I'm using it to embed templates, javascript and css inside modules which are then
-fatpacked into a single script. It's a horrible hack, caveat emptor etc.
+In most cases, this module is not what you want, and you should use a
+C<File::ShareDir> based system instead, but C<File::ShareDir> based systems are
+inherently not fat-pack friendly.
 
-=head1 SHOULD I USE THIS?
-
-Probably not. It's really not designed to be used except for in fatpacked scripts
-If you don't know what a fatpacked script is, you really shouldn't.
+However, if you need embedded, single-file deployable applications, aggregating
+not only Perl Modules, but templates, javascript and css, this tool will make
+some of your work easier.
 
 =head1 NOTES
 
