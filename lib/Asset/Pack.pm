@@ -57,6 +57,7 @@ our \$content = join q[], <DATA>;
 close *DATA;
 \$content =~ s/\\s+//g;
 \$content = unpack 'u', \$content;
+1;
 __DATA__
 $content
 EOF
