@@ -10,6 +10,8 @@ our $VERSION = '0.000001';
 
 # ABSTRACT: Easily pack assets into Perl Modules that can be fat-packed
 
+# AUTHORITY
+
 use parent qw(Exporter);
 our @EXPORT_OK = qw(
   module_rel_path module_full_path
