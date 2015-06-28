@@ -11,8 +11,7 @@ our $VERSION = '0.000001';
 
 # ABSTRACT: Easily pack assets into perl modules that can be fatpacked
 
-require Exporter;
-our @ISA = qw(Exporter);
+use parent qw(Exporter);
 our @EXPORT_OK = qw(
   module_rel_path module_full_path
   pack_asset write_module unpack_asset
