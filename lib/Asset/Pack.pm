@@ -21,7 +21,7 @@ our @EXPORT = qw(write_module unpack_asset);
 
 sub module_rel_path {
   my ($module) = @_;
-  $module =~ s(::)(/)g;
+  $module =~ s{::}{/}g;
   return "${module}.pm";
 }
 
