@@ -57,7 +57,7 @@ sub unpack_asset {
     no strict 'refs';
     \*{"${caller}::DATA"};
   };
-  my $content = join("", $fh->getlines);
+  my $content = join q[], $fh->getlines;
   $content =~ s/\s+//g;
   return decode_base64($content);
 }
