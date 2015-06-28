@@ -48,8 +48,7 @@ sub pack_asset {
   my $packer            = __PACKAGE__ . ' version ' . $VERSION;
   my $version_statement = q[];
   if ( defined $version ) {
-    ## no critic (ValuesAndExpressions::RequireInterpolationOfMetachars)
-    $version_statement = sprintf q[our $VERSION = '%s';], $version;
+    $version_statement = _pack_variable( 'our', 'VERSION', $version );
   }
   return <<"EOF";
 package $module;
@@ -67,7 +66,6 @@ EOF
 
 sub pack_index {
   my ( $module, $index ) = @_;
-  require Data::Dumper;
   for my $key ( keys %{$index} ) {
     next unless ref $index->{$key};
     if ( eval { $index->{$key}->isa('Path::Tiny') } ) {
@@ -76,16 +74,12 @@ sub pack_index {
     }
     die "Unsupported ref value in index for key $key: $index->{$key}";
   }
-  my $dumper = Data::Dumper->new( [$index], ['index'] );
-  $dumper->Purity(1)->Sortkeys(1);
-  $dumper->Terse(0)->Indent(1);
-  my $index_text = $dumper->Dump();
-
+  my $index_text = _pack_variable( 'our', 'index', $index );
   my $packer = __PACKAGE__ . ' version ' . $VERSION;
   return <<"EOF";
 package $module;
 # Generated index by $packer
-our $index_text;
+$index_text;
 1;
 EOF
 
@@ -145,6 +139,15 @@ sub find_and_pack {
     };
   }
   return { ok => \@ok, fail => \@fail, unchanged => \@unchanged };
+}
+
+sub _pack_variable {
+  my ( $context, $varname, $content ) = @_;
+  require Data::Dumper;
+  my $dumper = Data::Dumper->new( [$content], [$varname] );
+  $dumper->Purity(1)->Sortkeys(1);
+  $dumper->Terse(0)->Indent(1);
+  return sprintf '%s %s;', $context, $dumper->Dump();
 }
 
 1;
