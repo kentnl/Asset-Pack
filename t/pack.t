@@ -4,7 +4,6 @@ use warnings;
 use Test::More;
 
 use 5.010000;
-use MIME::Base64;
 use Path::Tiny;
 use File::Temp qw(tempdir);
 use Asset::Pack qw(module_rel_path module_full_path pack_asset write_module unpack_asset);
@@ -38,11 +37,12 @@ use Asset::Pack qw(module_rel_path module_full_path pack_asset write_module unpa
   );
   foreach my $p (keys %paths) {
     my $content = path($p)->slurp_raw;
-    my $encoded = encode_base64($content);
+    my $encoded = pack 'u', $content;
     my $expected = <<EOF
 package $paths{$p};
-use Asset::Pack;
-our \$content = unpack_asset;
+our \$content = join q[], *DATA->getlines;
+\$content =~ s/\\s+//g;
+\$content = unpack 'u', \$content;
 __DATA__
 $encoded
 EOF

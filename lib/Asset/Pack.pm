@@ -5,7 +5,6 @@ use warnings;
 package Asset::Pack;
 
 use Path::Tiny qw( path );
-use MIME::Base64 qw( encode_base64 decode_base64 );
 
 our $VERSION = '0.000001';
 
@@ -14,10 +13,10 @@ our $VERSION = '0.000001';
 use parent qw(Exporter);
 our @EXPORT_OK = qw(
   module_rel_path module_full_path
-  pack_asset write_module unpack_asset
+  pack_asset write_module
 );
 
-our @EXPORT = qw(write_module unpack_asset);
+our @EXPORT = qw(write_module);
 
 sub module_rel_path {
   my ($module) = @_;
@@ -32,11 +31,12 @@ sub module_full_path {
 
 sub pack_asset {
   my ( $module, $path ) = @_;
-  my $content = encode_base64( path($path)->slurp_raw );
+  my $content = pack 'u', path($path)->slurp_raw;
   return <<"EOF";
 package $module;
-use Asset::Pack;
-our \$content = unpack_asset;
+our \$content = join q[], *DATA->getlines;
+\$content =~ s/\\s+//g;
+\$content = unpack 'u', \$content;
 __DATA__
 $content
 EOF
@@ -48,17 +48,6 @@ sub write_module {
   $dest->parent->mkpath;    # mkdir
   $dest->spew_utf8( pack_asset( $module, $source ) );
   return;
-}
-
-sub unpack_asset {
-  my $caller = caller;
-  my $fh     = do {
-    no strict 'refs';
-    \*{"${caller}::DATA"};
-  };
-  my $content = join q[], $fh->getlines;
-  $content =~ s/\s+//g;
-  return decode_base64($content);
 }
 
 1;
@@ -83,12 +72,6 @@ inherently not fat-pack friendly.
 However, if you need embedded, single-file applications, aggregating not only
 Perl Modules, but templates, JavaScript and CSS, this tool will make some of
 your work easier.
-
-=head1 NOTES
-
-Generated files are dependent on the Asset::Pack module. I might remove this
-requirement in future but it's not a concern for me for the project I wrote
-this for. Patches welcome.
 
 =func C<module_rel_path>
 
@@ -121,21 +104,10 @@ module with the content packed into the data section
   write_module($source, $module, $libdir)
 
   write_module("./foo.js", "Foo::Bar", "./")
-  # ./Foo/Bar.pm now contains base64 encoded copy of foo.js
+  # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
 
 Given a source asset path, a module name and a library directory, packs the
 source into a module named C<$module> and saves it in the right place relative
 to C<$libdir>
 
 See L</SYNOPSIS> and try it out!
-
-=func C<unpack_asset>
-
-  unpack_asset -> byte_string
-
-  package Foo;
-  my $content = unpack_asset; # "function(){}"
-  __DATA__
-  ZnVuY3Rpb24oKXt9
-
-Returns the contents of C<DATA> in the callers context, decoded.
