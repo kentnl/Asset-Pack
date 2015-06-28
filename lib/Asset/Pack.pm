@@ -9,7 +9,7 @@ use MIME::Base64 qw( encode_base64 decode_base64 );
 
 our $VERSION = '0.000001';
 
-# ABSTRACT: Easily pack assets into perl modules that can be fatpacked
+# ABSTRACT: Easily pack assets into Perl Modules that can be fat-packed
 
 use parent qw(Exporter);
 our @EXPORT_OK = qw(
@@ -73,44 +73,47 @@ __END__
 
 =head1 DESCRIPTION
 
-This module allows you to construct installable and fat-packable perl modules
-representing the content of arbitrary files.
+This module allows you to construct Perl modules containing the content of
+arbitrary files, which may then be installed or fat-packed.
 
 In most cases, this module is not what you want, and you should use a
 C<File::ShareDir> based system instead, but C<File::ShareDir> based systems are
 inherently not fat-pack friendly.
 
-However, if you need embedded, single-file deployable applications, aggregating
-not only Perl Modules, but templates, javascript and css, this tool will make
-some of your work easier.
+However, if you need embedded, single-file applications, aggregating not only
+Perl Modules, but templates, JavaScript and CSS, this tool will make some of
+your work easier.
 
 =head1 NOTES
 
-Generated files are dependent on the Asset::Pack module. I might remove this dep in future
-but it's not a concern for me for the project I wrote this for. Patches welcome.
+Generated files are dependent on the Asset::Pack module. I might remove this
+requirement in future but it's not a concern for me for the project I wrote
+this for. Patches welcome.
 
 =head1 FUNCTIONS
 
-=head2 module_rel_path(module) -> file_path (string)
+=head2 C<< module_rel_path(module) -> file_path (string) >>
 
-Turns a module name (e.g. 'Foo::Bar') into a file path relative to a library directory root
+Turns a module name (e.g. 'Foo::Bar') into a file path relative to a library
+directory root
 
-=head2 module_full_path(module, libdir) -> file_path (string)
+=head2 C<< module_full_path(module, libdir) -> file_path (string) >>
 
 Turns a module name and a library directory into a file path
 
-=head2 pack_asset($module, $path) -> byte_string
+=head2 C<< pack_asset($module, $path) -> byte_string >>
 
-Given a module name and the path of an asset to be packed, returns the new module with the
-content packed into the data section
+Given a module name and the path of an asset to be packed, returns the new
+module with the content packed into the data section
 
-=head2 write_module($source, $module, $libdir)
+=head2 C<< write_module($source, $module, $libdir) >>
 
-Given a source asset path, a module name and a library directory, packs the source into a module
-named C<$module> and saves it in the right place relative to C<$libdir>
+Given a source asset path, a module name and a library directory, packs the
+source into a module named C<$module> and saves it in the right place relative
+to C<$libdir>
 
 See 'synopsis' and try it out!
 
-=head2 unpack_asset(FH) -> byte_string
+=head2 C<< unpack_asset(FH) -> byte_string >>
 
-FH is assumed to be DATA. Please pass in DATA
+C<FH> is assumed to be C<DATA>. Please pass in C<DATA>
