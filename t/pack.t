@@ -44,6 +44,7 @@ note "Testing write_module, pack_asset, and module-self-unpack";
     my $expected = <<EOF
 package $paths{$p};
 our \$content = join q[], *DATA->getlines;
+close *DATA;
 \$content =~ s/\\s+//g;
 \$content = unpack 'u', \$content;
 __DATA__

@@ -35,6 +35,7 @@ sub pack_asset {
   return <<"EOF";
 package $module;
 our \$content = join q[], *DATA->getlines;
+close *DATA;
 \$content =~ s/\\s+//g;
 \$content = unpack 'u', \$content;
 __DATA__
