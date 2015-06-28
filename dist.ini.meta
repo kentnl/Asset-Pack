@@ -1,7 +1,6 @@
 ; vim: syntax=dosini
 name    = Asset-Pack
-author  = James Laver
-author  = Kent Fredric <kentnl@cpan.org>
+author  = James Laver <james.laver@gmail.com>
 license = Perl_5
 copyright_holder = James Laver on time generously donated by Anomalio
 
@@ -19,3 +18,5 @@ srcreadme         = pod
 
 [Munge::Whitespace]
 filename = LICENSE
+
+;authordep Pod::Weaver::Section::Contributors = 0

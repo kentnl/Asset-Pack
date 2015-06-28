@@ -71,19 +71,15 @@ to C<$libdir>
 
 See L</SYNOPSIS> and try it out!
 
-=head1 AUTHORS
+=head1 AUTHOR
 
-=over 4
+James Laver <james.laver@gmail.com>
 
-=item *
+=head1 CONTRIBUTOR
 
-James Laver
-
-=item *
+=for stopwords Kent Fredric
 
 Kent Fredric <kentnl@cpan.org>
-
-=back
 
 =head1 COPYRIGHT AND LICENSE
 
