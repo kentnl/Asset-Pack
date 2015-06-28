@@ -44,10 +44,11 @@ EOF
 }
 
 sub write_module {
-  my ($source, $module, $libdir) = @_;
-  my $dest = module_full_path($module, $libdir);
-  $dest->parent->mkpath; # mkdir
-  $dest->spew_utf8(pack_asset($module, $source));
+  my ( $source, $module, $libdir ) = @_;
+  my $dest = module_full_path( $module, $libdir );
+  $dest->parent->mkpath;    # mkdir
+  $dest->spew_utf8( pack_asset( $module, $source ) );
+  return;
 }
 
 sub unpack_asset {
