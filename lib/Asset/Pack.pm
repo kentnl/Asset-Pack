@@ -69,7 +69,7 @@ __END__
     #!/usr/bin/env perl
     use Asset::Pack;
     # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
-    write_module('assets/foo.js' 'MyApp::Asset::FooJS' 'lib');
+    write_module('assets/foo.js','MyApp::Asset::FooJS','lib');
 
 =head1 DESCRIPTION
 
@@ -90,30 +90,52 @@ Generated files are dependent on the Asset::Pack module. I might remove this
 requirement in future but it's not a concern for me for the project I wrote
 this for. Patches welcome.
 
-=head1 FUNCTIONS
+=func C<module_rel_path>
 
-=head2 C<< module_rel_path(module) -> file_path (string) >>
+  module_rel_path(module) -> file_path (string)
+
+  module_rel_path("Foo::Bar") # "Foo/Bar.pm"
 
 Turns a module name (e.g. 'Foo::Bar') into a file path relative to a library
 directory root
 
-=head2 C<< module_full_path(module, libdir) -> file_path (string) >>
+=func C<module_full_path>
+
+  module_full_path(module, libdir) -> file_path (string)
+
+  module_full_path("Foo::Bar", "./") # "./Foo/Bar.pm"
 
 Turns a module name and a library directory into a file path
 
-=head2 C<< pack_asset($module, $path) -> byte_string >>
+=func C<pack_asset>
+
+  pack_asset($module, $path) -> byte_string
+
+  pack_asset("Foo::Bar", "./foo.js") # "ZnVuY3Rpb24oKXt9"
 
 Given a module name and the path of an asset to be packed, returns the new
 module with the content packed into the data section
 
-=head2 C<< write_module($source, $module, $libdir) >>
+=func C<write_module>
+
+  write_module($source, $module, $libdir)
+
+  write_module("./foo.js", "Foo::Bar", "./")
+  # ./Foo/Bar.pm now contains base64 encoded copy of foo.js
 
 Given a source asset path, a module name and a library directory, packs the
 source into a module named C<$module> and saves it in the right place relative
 to C<$libdir>
 
-See 'synopsis' and try it out!
+See L</SYNOPSIS> and try it out!
 
-=head2 C<< unpack_asset(FH) -> byte_string >>
+=func C<unpack_asset>
 
-C<FH> is assumed to be C<DATA>. Please pass in C<DATA>
+  unpack_asset -> byte_string
+
+  package Foo;
+  my $content = unpack_asset; # "function(){}"
+  __DATA__
+  ZnVuY3Rpb24oKXt9
+
+Returns the contents of C<DATA> in the callers context, decoded.
