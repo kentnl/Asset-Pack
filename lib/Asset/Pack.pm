@@ -5,6 +5,7 @@ use warnings;
 package Asset::Pack;
 
 use Path::Tiny qw( path );
+use Try::Tiny qw( try catch );
 
 our $VERSION = '0.000001';
 
@@ -83,39 +84,45 @@ sub write_index {
 }
 
 sub find_assets {
-  my ($dir,$ns) = @_;
+  my ( $dir, $ns ) = @_;
   my $assets = path($dir);
   %{
-    $assets->visit(sub {
-      my ($path, $state) = @_;
-      return if $path->is_dir;
-      my $rel = $path->relative($assets);
-      $state{modulify($rel, $ns)} = $rel;
-      return;
-     }, {recurse => true})
+    $assets->visit(
+      sub {
+        my ( $path, $state ) = @_;
+        return if $path->is_dir;
+        my $rel = $path->relative($assets);
+        $state->{ modulify( $rel, $ns ) } = $rel;
+        return;
+      },
+      { recurse => 1 }
+    )
   };
 }
 
 sub find_and_pack {
-  my ($dir, $ns) = @_;
-  my %assets = find_assets($dir, $ns);
-  while (my ($module, $file) = each %assets) {
-    my $m = path(module_full_path($module, 'lib'));
+  my ( $dir, $ns ) = @_;
+  my %assets = find_assets( $dir, $ns );
+  my $exitstatus;
+  while ( my ( $module, $file ) = each %assets ) {
+    my $m = path( module_full_path( $module, 'lib' ) );
     my $fd = try { $file->stat->mtime } catch { 0 };
-    my $md = try { $m->stat->mtime } catch { 0 };
-    if ($fd > $md) {
+    my $md = try { $m->stat->mtime } catch    { 0 };
+    if ( $fd > $md ) {
       try {
-        write_module($file, $module, 'lib');
-        say "$m updated from $f";
+        write_module( $file, $module, 'lib' );
+        print "$m updated from $file\n";
       }
       catch {
-        say "Failed updating module $m: $_";
+        print "Failed updating module $m: $_\n";
         $exitstatus++;
       }
-    } else {
-      say "$m is up to date";
+    }
+    else {
+      print "$m is up to date\n";
     }
   }
+  return $exitstatus;
 }
 
 1;
