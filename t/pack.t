@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use 5.010000;
+use 5.006;
 use Path::Tiny;
 use File::Temp qw(tempdir);
 use Asset::Pack qw(module_rel_path module_full_path pack_asset write_module);
