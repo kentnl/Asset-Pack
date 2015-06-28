@@ -126,26 +126,24 @@ sub find_assets {
 sub find_and_pack {
   my ( $dir, $ns ) = @_;
   my %assets = find_assets( $dir, $ns );
-  my $exitstatus;
+  my ( @ok, @fail );
   while ( my ( $module, $file ) = each %assets ) {
     my $m = path( module_full_path( $module, 'lib' ) );
     my $fd = try { $file->stat->mtime } catch { 0 };
     my $md = try { $m->stat->mtime } catch    { 0 };
-    if ( $fd > $md ) {
-      try {
-        write_module( $file, $module, 'lib' );
-        print "$m updated from $file\n";
-      }
-      catch {
-        print "Failed updating module $m: $_\n";
-        $exitstatus++;
-      };
+    if ( $fd <= $md ) {
+      push @ok, { module => $m, file => $file };
+      next;
     }
-    else {
-      print "$m is up to date\n";
+    try {
+      write_module( $file, $module, 'lib' );
+      push @ok, { module => $m, file => $file };
     }
+    catch {
+      push @fail, { module => $m, file => $file, error => $_ };
+    };
   }
-  return $exitstatus;
+  return { ok => \@ok, fail => \@fail };
 }
 
 1;
