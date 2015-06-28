@@ -17,9 +17,7 @@ my $sample = {
 my $code = write_index( $sample, 'Test::X::Index', "$temp/lib" );
 
 unshift @INC, "$temp/lib";
-
-is( exception { require Test::X::Index; 1; }, undef, "Can load Test::X::Index" );
-
+use_ok("Test::X::Index");
 is_deeply( $sample, do { no warnings 'once'; $Test::X::Index::index }, "Stored index resurrected from disk intact" );
 
 done_testing;
