@@ -64,6 +64,14 @@ Turns a module name and a library directory into a file path
 Given a module name and the path of an asset to be packed, returns the new
 module with the content packed into the data section
 
+=head2 C<pack_index>
+
+  pack_index($module, \%index) -> byte string
+
+  pack_asset("Foo::Index", { "Some::Name" => "foo.js" });
+
+Creates the contents for an asset index
+
 =head2 C<write_module>
 
   write_module($source, $module, $libdir)
@@ -76,6 +84,14 @@ source into a module named C<$module> and saves it in the right place relative
 to C<$libdir>
 
 See L</SYNOPSIS> and try it out!
+
+=head2 C<write_index>
+
+  write_index($index, $module, $libdir )
+
+  write_index({ "A" => "X.js" }, "Foo::Bar", "./");
+
+Creates a file index.
 
 =head1 AUTHOR
 

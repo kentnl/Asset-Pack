@@ -19,6 +19,7 @@ our @EXPORT_OK = qw(
   module_rel_path module_full_path
   pack_asset write_module
   find_assets find_and_pack
+  pack_index write_index
 );
 
 our @EXPORT = qw(write_module find_and_pack);
@@ -61,6 +62,30 @@ $content
 EOF
 }
 
+sub pack_index {
+  my ( $module, $index ) = @_;
+  require Data::Dumper;
+  for my $key ( keys %{$index} ) {
+    next unless ref $index->{$key};
+    if ( eval { $index->{$key}->isa('Path::Tiny') } ) {
+      $index->{$key} = "$index";
+      next;
+    }
+    die "Unsupported ref value in index for key $key: $index->{$key}";
+  }
+  my $index_text =
+    Data::Dumper->new( [$index], ['index'] )->Purity(1)->Sortkeys(1)->Terse(0)->Indent(1)->Dump();
+
+  my $packer = __PACKAGE__ . ' version ' . $VERSION;
+  return <<"EOF";
+package $module;
+# Generated index by $packer
+our $index_text;
+1;
+EOF
+
+}
+
 sub write_module {
   my ( $source, $module, $libdir ) = @_;
   my $dest = module_full_path( $module, $libdir );
@@ -70,17 +95,11 @@ sub write_module {
 }
 
 sub write_index {
-  my ( $path, $module, $index ) = @_;
-
-  # This is a copy and paste from above and should be used when you fix it, kentnl
-  #   return <<EOF;
-  # package $module;
-  # use Asset::Pack;
-  # our \$content = unpack_asset;
-  # __DATA__
-  # $content
-  # EOF
-
+  my ( $index, $module, $libdir ) = @_;
+  my $dest = module_full_path( $module, $libdir );
+  $dest->parent->mkpath;
+  $dest->spew_utf8( pack_index( $module, $index ) );
+  return;
 }
 
 sub find_assets {
@@ -180,6 +199,14 @@ Turns a module name and a library directory into a file path
 Given a module name and the path of an asset to be packed, returns the new
 module with the content packed into the data section
 
+=func C<pack_index>
+
+  pack_index($module, \%index) -> byte string
+
+  pack_asset("Foo::Index", { "Some::Name" => "foo.js" });
+
+Creates the contents for an asset index
+
 =func C<write_module>
 
   write_module($source, $module, $libdir)
@@ -192,3 +219,11 @@ source into a module named C<$module> and saves it in the right place relative
 to C<$libdir>
 
 See L</SYNOPSIS> and try it out!
+
+=func C<write_index>
+
+  write_index($index, $module, $libdir )
+
+  write_index({ "A" => "X.js" }, "Foo::Bar", "./");
+
+Creates a file index.
