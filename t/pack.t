@@ -43,7 +43,8 @@ note "Testing write_module, pack_asset, and module-self-unpack";
     my $encoded = pack 'u', $content;
     my $expected = <<EOF
 package $paths{$p};
-our \$content = join q[], *DATA->getlines;
+# Generated from $p by Asset::Pack version $Asset::Pack::VERSION
+our \$content = join q[], <DATA>;
 close *DATA;
 \$content =~ s/\\s+//g;
 \$content = unpack 'u', \$content;

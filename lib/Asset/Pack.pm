@@ -34,9 +34,11 @@ sub module_full_path {
 sub pack_asset {
   my ( $module, $path ) = @_;
   my $content = pack 'u', path($path)->slurp_raw;
+  my $packer = __PACKAGE__ . ' version ' . $VERSION;
   return <<"EOF";
 package $module;
-our \$content = join q[], *DATA->getlines;
+# Generated from $path by $packer
+our \$content = join q[], <DATA>;
 close *DATA;
 \$content =~ s/\\s+//g;
 \$content = unpack 'u', \$content;
