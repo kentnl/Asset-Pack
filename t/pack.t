@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use v5.10;
+use 5.010000;
 use MIME::Base64;
 use Path::Tiny;
 use File::Temp qw(tempdir);
