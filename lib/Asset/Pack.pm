@@ -25,9 +25,9 @@ our @EXPORT_OK = qw(
 our @EXPORT = qw(write_module find_and_pack);
 
 sub modulify {
-  my ($path, $namespace) = @_;
-  $path =~ s/[^a-z]//gi;
-  $namespace . "::" . $path;
+  my ( $path, $namespace ) = @_;
+  $path =~ s/[[^:lower:]]//gi;
+  return $namespace . q[::] . $path;
 }
 
 sub module_rel_path {
@@ -47,6 +47,7 @@ sub pack_asset {
   my $packer            = __PACKAGE__ . ' version ' . $VERSION;
   my $version_statement = q[];
   if ( defined $version ) {
+    ## no critic (ValuesAndExpressions::RequireInterpolationOfMetachars)
     $version_statement = sprintf q[our $VERSION = '%s';], $version;
   }
   return <<"EOF";
@@ -74,8 +75,10 @@ sub pack_index {
     }
     die "Unsupported ref value in index for key $key: $index->{$key}";
   }
-  my $index_text =
-    Data::Dumper->new( [$index], ['index'] )->Purity(1)->Sortkeys(1)->Terse(0)->Indent(1)->Dump();
+  my $dumper = Data::Dumper->new( [$index], ['index'] );
+  $dumper->Purity(1)->Sortkeys(1);
+  $dumper->Terse(0)->Indent(1);
+  my $index_text = $dumper->Dump();
 
   my $packer = __PACKAGE__ . ' version ' . $VERSION;
   return <<"EOF";
@@ -106,7 +109,7 @@ sub write_index {
 sub find_assets {
   my ( $dir, $ns ) = @_;
   my $assets = path($dir);
-  %{
+  return %{
     $assets->visit(
       sub {
         my ( $path, $state ) = @_;
@@ -115,8 +118,8 @@ sub find_assets {
         $state->{ modulify( $rel, $ns ) } = $rel;
         return;
       },
-      { recurse => 1 }
-    )
+      { recurse => 1 },
+    );
   };
 }
 
@@ -136,7 +139,7 @@ sub find_and_pack {
       catch {
         print "Failed updating module $m: $_\n";
         $exitstatus++;
-      }
+      };
     }
     else {
       print "$m is up to date\n";
@@ -172,7 +175,7 @@ Perl Modules, but templates, JavaScript and CSS, this tool will make some of
 your work easier.
 
 If anything fails it throws an exception. This is meant for scripts that will be tended by
-a human (or analysed if it fails as part of a build).
+a human (or analyzed if it fails as part of a build).
 
 =func C<module_rel_path>
 

@@ -9,7 +9,7 @@ verbose = 9
 
 [Bangs::ProhibitCommentedOutCode]
 
-[Bangs::ProhibitDebuggingModules]
+[-Bangs::ProhibitDebuggingModules]
 
 [-Bangs::ProhibitFlagComments]
 
@@ -170,7 +170,7 @@ stop_words = Laver Anomalio CSS
 
 [ErrorHandling::RequireCheckingReturnValueOfEval]
 
-[ErrorHandling::RequireUseOfExceptions]
+[-ErrorHandling::RequireUseOfExceptions]
 
 [InputOutput::ProhibitBacktickOperators]
 

@@ -34,7 +34,7 @@ Perl Modules, but templates, JavaScript and CSS, this tool will make some of
 your work easier.
 
 If anything fails it throws an exception. This is meant for scripts that will be tended by
-a human (or analysed if it fails as part of a build).
+a human (or analyzed if it fails as part of a build).
 
 =head1 FUNCTIONS
 
