@@ -7,11 +7,19 @@ use MIME::Base64;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(
+  modulify
   module_rel_path module_full_path
   pack_asset write_module unpack_asset
+  find_assets find_and_pack
 );
 
-our @EXPORT = qw(write_module unpack_asset);
+our @EXPORT = qw(write_module find_and_pack unpack_asset);
+
+sub modulify {
+  my ($path, $namespace) = @_;
+  $path =~ s/[^a-z]//gi;
+  $namespace . "::" . $path;
+}
 
 sub module_rel_path {
   my ($module) = @_;
@@ -43,12 +51,61 @@ sub write_module {
   $dest->spew_utf8(pack_asset($module, $source));
 }
 
+sub write_index {
+  my ($path, $module, $index) = @_;
+# This is a copy and paste from above and should be used when you fix it, kentnl
+#   return <<EOF;
+# package $module;
+# use Asset::Pack;
+# our \$content = unpack_asset;
+# __DATA__
+# $content
+# EOF
+  
+}
+
+sub find_assets {
+  my ($dir,$ns) = @_;
+  my $assets = path($dir);
+  %{
+    $assets->visit(sub {
+      my ($path, $state) = @_;
+      return if $path->is_dir;
+      my $rel = $path->relative($assets);
+      $state{modulify($rel, $ns)} = $rel;
+      return;
+     }, {recurse => true})
+  };
+}
+
 sub unpack_asset {
   my $caller = caller;
   my $fh = \*{"${caller}::DATA"};
   my $content = join("", $fh->getlines);
   $content =~ s/\s+//g;
   return decode_base64($content);
+}
+
+sub find_and_pack {
+  my ($dir, $ns) = @_;
+  my %assets = find_assets($dir, $ns);
+  while (my ($module, $file) = each %assets) {
+    my $m = path(module_full_path($module, 'lib'));
+    my $fd = try { $file->stat->mtime } catch { 0 };
+    my $md = try { $m->stat->mtime } catch { 0 };
+    if ($fd > $md) {
+      try {
+        write_module($file, $module, 'lib');
+        say "$m updated from $f";
+      }
+      catch {
+        say "Failed updating module $m: $_";
+        $exitstatus++;
+      }
+    } else {
+      say "$m is up to date";
+    }
+  }
 }
 
 1;
@@ -64,6 +121,9 @@ Asset::Pack - Easily pack assets into perl modules that can be fatpacked
     use Asset::Pack;
     # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
     write_module('assets/foo.js' 'MyApp::Asset::FooJS' 'lib');
+    # Or better still, this discovers them all and namespaces under MyApp::Asset
+    find_and_pack('assets', 'MyApp::Asset");
+    # It also writes MyApp::Asset which is an index file
 
 =head1 WHY?
 
@@ -81,6 +141,9 @@ If you don't know what a fatpacked script is, you really shouldn't.
 
 Generated files are dependent on the Asset::Pack module. I might remove this dep in future
 but it's not a concern for me for the project I wrote this for. Patches welcome.
+
+If anything fails it throws an exception. This is meant for scripts that will be tended by
+a human (or analysed if it fails as part of a build).
 
 =head1 FUNCTIONS
 
