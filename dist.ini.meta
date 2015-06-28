@@ -1,0 +1,23 @@
+; vim: syntax=dosini
+name    = Asset-Pack
+author  = James Laver
+author  = Kent Fredric <kentnl@cpan.org>
+license = Perl_5
+copyright_holder = James Laver on time generously donated by Anomalio
+
+[@Author::KENTNL]
+; twitter_extra_hash_tags = 
+normal_form       = numify
+mantissa          = 6
+toolkit           = eumm
+toolkit_hardness  = soft
+bumpversions      = 1
+copyfiles         = LICENSE
+srcreadme         = pod
+-remove           = Authority
+-remove           = Author::KENTNL::RecommendFixes
+-remove           = MetaData::BuiltWith
+GithubMeta.remote = jjl
+
+[Munge::Whitespace]
+filename = LICENSE
