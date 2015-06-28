@@ -32,12 +32,17 @@ sub module_full_path {
 }
 
 sub pack_asset {
-  my ( $module, $path ) = @_;
-  my $content = pack 'u', path($path)->slurp_raw;
-  my $packer = __PACKAGE__ . ' version ' . $VERSION;
+  my ( $module, $path, $version ) = @_;
+  my $content           = pack 'u', path($path)->slurp_raw;
+  my $packer            = __PACKAGE__ . ' version ' . $VERSION;
+  my $version_statement = q[];
+  if ( defined $version ) {
+    $version_statement = sprintf q[our $VERSION = '%s';], $version;
+  }
   return <<"EOF";
 package $module;
 # Generated from $path by $packer
+$version_statement
 our \$content = join q[], <DATA>;
 close *DATA;
 \$content =~ s/\\s+//g;

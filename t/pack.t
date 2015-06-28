@@ -44,6 +44,7 @@ note "Testing write_module, pack_asset, and module-self-unpack";
     my $expected = <<EOF
 package $paths{$p};
 # Generated from $p by Asset::Pack version $Asset::Pack::VERSION
+
 our \$content = join q[], <DATA>;
 close *DATA;
 \$content =~ s/\\s+//g;
