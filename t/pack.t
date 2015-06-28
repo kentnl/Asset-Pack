@@ -33,7 +33,7 @@ use Asset::Pack qw(module_rel_path module_full_path pack_asset write_module unpa
   unshift @INC, $tmpdir;
   my %paths = (
     't/pack.t' => 'Test::PackT',
-    'README.pod' => 'Test::READMEpod',
+    'LICENSE' => 'Test::LICENSE',
     'lib/Asset/Pack.pm' => 'Test::AssetPack',
   );
   foreach my $p (keys %paths) {
