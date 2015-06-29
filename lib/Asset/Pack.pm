@@ -88,12 +88,12 @@ sub write_module {
   my ( $source, $module, $libdir, $metadata ) = @_;
   my $dest = module_full_path( $module, $libdir );
   $dest->parent->mkpath;    # mkdir
-  $dest->spew_utf8( pack_asset( $module, $source , $metadata ) );
+  $dest->spew_utf8( pack_asset( $module, $source, $metadata ) );
   return;
 }
 
 sub write_index {
-  my ( $index, $module, $libdir , $metadata ) = @_;
+  my ( $index, $module, $libdir, $metadata ) = @_;
   my $dest = module_full_path( $module, $libdir );
   $dest->parent->mkpath;
   $dest->spew_utf8( pack_index( $module, $index, $metadata ) );
