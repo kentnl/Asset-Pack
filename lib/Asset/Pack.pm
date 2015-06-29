@@ -45,7 +45,7 @@ sub module_full_path {
 sub pack_asset {
   my ( $module, $path, $metadata ) = @_;
   my $content = pack 'u', path($path)->slurp_raw;
-  my $metadata_header = _pack_metadata( $metadata, { add_banned => ['content'] } );
+  my $metadata_header = _pack_metadata($metadata);
 
   return <<"EOF";
 use strict;
@@ -73,11 +73,11 @@ sub pack_index {
     }
     die "Unsupported ref value in index for key $key: $index->{$key}";
   }
-  $metadata ||= {};
-  $metadata->{index} = $index;
-  my $index_text = _pack_metadata( $metadata, { add_special => ['index'] } );
+  my $metadata_header = _pack_metadata($metadata);
+  my $index_text = _pack_variable( 'our', 'index', $index );
   return <<"EOF";
 package $module;
+$metadata_header;
 $index_text;
 1;
 EOF
@@ -149,66 +149,26 @@ sub _pack_variable {
   return sprintf '%s %s', $context, $dumper->Dump();
 }
 
-# _pack_metadata($metadata,$config) returns evalable code creating a
+# _pack_metadata($metadata,) returns evalable code creating a
 # collection of `our` variables.
 #
-# Importantly, it sticks most of the content in a top level variable called METADATA
-# and then all the other `our` variables are declared in terms of that, by default.
+# Importantly, it sticks most of the content in a top level variable called $meta,
+# and creates `our $VERSION` when VERSION is in metadata.
 #
-# Additionally, a default value of PACKER = { ... } is injected into $metadata.
-#
-# config:
-#  special: Entries appearing in the "special" list will be declared before all others
-#           and will be excluded by default from $METADATA. The "special" list includes VERSION
-#           by default.
-#  metadata_name: Describes the name of the top level variable the primary data is stored in.
-#           If this is undef, then the top level $METADATA will be skipped, and all variables
-#           will be created directly the same way as <special> are. NOTE that this prevents
-#           variables from being cross-referenced.
-#  banned: Entries appearing in this list will cause a fatal error if entries by the same name
-#          occur in $metadata. This is a guard against users specifying variables that you
-#          may have alternative mechansims to declaring manually which can't be overridden.
-#          By default, this list contains <metadata_name>
-#  add_special: like <special>, but inherits the defaults.
-#  add_banned: like <banned>, but inherits the defaults.
-#
+# Additionally, a default value of PACKER = { ... } is injected into $meta.
+
 sub _pack_metadata {
-  my ( $metadata, $config ) = @_;
+  my ( $metadata, ) = @_;
 
-  $config ||= {};
-  $config->{special} ||= ['VERSION'];
-  $config->{metadata_name} = 'METADATA' if not exists $config->{metadata_name};
-  $config->{banned} ||= [ defined $config->{metadata_name} ? $config->{metadata_name} : () ];
-  push @{ $config->{banned} },  @{ $config->{add_banned} }  if $config->{add_banned};
-  push @{ $config->{special} }, @{ $config->{add_special} } if $config->{add_special};
-
-  my @headers;
   $metadata->{PACKER} ||= {
     name    => __PACKAGE__,
     version => "$VERSION",
   };
-
-  for my $banned_header ( @{ $config->{banned} } ) {
-    next unless exists $metadata->{$banned_header};
-    die "Explicit metadata field $banned_header disallowed";
+  my @headers;
+  if ( exists $metadata->{'VERSION'} ) {
+    push @headers, _pack_variable( 'our', 'VERSION', delete $metadata->{'VERSION'} );
   }
-
-  for my $special_header ( @{ $config->{special} } ) {
-    next unless exists $metadata->{$special_header};
-    push @headers, _pack_variable( 'our', $special_header, delete $metadata->{$special_header} );
-  }
-
-  if ( defined $config->{metadata_name} ) {
-    push @headers, _pack_variable( 'our', $config->{metadata_name}, $metadata );
-    for my $key ( sort keys %{$metadata} ) {
-      push @headers, 'our $' . $key . ' = $' . $config->{metadata_name} . '->{\'' . $key . '\'};' . qq[\n];
-    }
-  }
-  else {
-    for my $key ( sort keys %{$metadata} ) {
-      push @headers, _pack_variable( 'our', $key, $metadata->{$key} );
-    }
-  }
+  push @headers, _pack_variable( 'our', 'meta', $metadata );
   return join q[], @headers;
 }
 
