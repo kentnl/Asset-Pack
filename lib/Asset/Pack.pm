@@ -43,17 +43,13 @@ sub module_full_path {
 }
 
 sub pack_asset {
-  my ( $module, $path, $variables ) = @_;
-  $variables ||= {};
-
+  my ( $module, $path, $metadata ) = @_;
   my $content         = pack 'u', path($path)->slurp_raw;
-  my $packer          = __PACKAGE__ . ' version ' . $VERSION;
-  my $variable_header = _pack_metadata($variables);
+  my $metadata_header = _pack_metadata($metadata);
 
   return <<"EOF";
 package $module;
-# Generated from $path by $packer
-$variable_header
+$metadata_header
 our \$content = join q[], <DATA>;
 close *DATA;
 \$content =~ s/\\s+//g;
@@ -65,7 +61,7 @@ EOF
 }
 
 sub pack_index {
-  my ( $module, $index, $variables ) = @_;
+  my ( $module, $index, $metadata ) = @_;
   $index = { %{ $index || {} } };    # Shallow clone.
   for my $key ( keys %{$index} ) {
     next unless ref $index->{$key};
@@ -75,13 +71,11 @@ sub pack_index {
     }
     die "Unsupported ref value in index for key $key: $index->{$key}";
   }
-  $variables ||= {};
-  $variables->{index} = $index;
-  my $index_text = _pack_metadata($variables);
-  my $packer     = __PACKAGE__ . ' version ' . $VERSION;
+  $metadata ||= {};
+  $metadata->{index} = $index;
+  my $index_text = _pack_metadata($metadata);
   return <<"EOF";
 package $module;
-# Generated index by $packer
 $index_text;
 1;
 EOF
@@ -89,18 +83,18 @@ EOF
 }
 
 sub write_module {
-  my ( $source, $module, $libdir ) = @_;
+  my ( $source, $module, $libdir, $metadata ) = @_;
   my $dest = module_full_path( $module, $libdir );
   $dest->parent->mkpath;    # mkdir
-  $dest->spew_utf8( pack_asset( $module, $source ) );
+  $dest->spew_utf8( pack_asset( $module, $source , $metadata ) );
   return;
 }
 
 sub write_index {
-  my ( $index, $module, $libdir ) = @_;
+  my ( $index, $module, $libdir , $metadata ) = @_;
   my $dest = module_full_path( $module, $libdir );
   $dest->parent->mkpath;
-  $dest->spew_utf8( pack_index( $module, $index ) );
+  $dest->spew_utf8( pack_index( $module, $index, $metadata ) );
   return;
 }
 
@@ -162,6 +156,10 @@ sub _pack_metadata {
   $banned        ||= [$metadata_name];
 
   my @headers;
+  $metadata->{PACKER} ||= {
+    name => __PACKAGE__,
+    version => "$VERSION",
+  };
 
   for my $banned_header ( @{$banned} ) {
     next unless exists $metadata->{$banned_header};
