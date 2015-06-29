@@ -43,17 +43,17 @@ sub module_full_path {
 }
 
 sub pack_asset {
-  my ( $module, $path, $version ) = @_;
-  my $content           = pack 'u', path($path)->slurp_raw;
-  my $packer            = __PACKAGE__ . ' version ' . $VERSION;
-  my $version_statement = q[];
-  if ( defined $version ) {
-    $version_statement = _pack_variable( 'our', 'VERSION', $version );
-  }
+  my ( $module, $path, $variables ) = @_;
+  $variables ||= {};
+
+  my $content         = pack 'u', path($path)->slurp_raw;
+  my $packer          = __PACKAGE__ . ' version ' . $VERSION;
+  my $variable_header = _pack_metadata($variables);
+
   return <<"EOF";
 package $module;
 # Generated from $path by $packer
-$version_statement
+$variable_header
 our \$content = join q[], <DATA>;
 close *DATA;
 \$content =~ s/\\s+//g;
@@ -75,8 +75,10 @@ sub pack_index {
     }
     die "Unsupported ref value in index for key $key: $index->{$key}";
   }
-  my $index_text = _pack_variable( 'our', 'index', $index );
-  my $packer = __PACKAGE__ . ' version ' . $VERSION;
+  $variables ||= {};
+  $variables->{index} = $index;
+  my $index_text = _pack_metadata($variables);
+  my $packer     = __PACKAGE__ . ' version ' . $VERSION;
   return <<"EOF";
 package $module;
 # Generated index by $packer
@@ -148,7 +150,36 @@ sub _pack_variable {
   my $dumper = Data::Dumper->new( [$content], [$varname] );
   $dumper->Purity(1)->Sortkeys(1);
   $dumper->Terse(0)->Indent(1);
-  return sprintf '%s %s;', $context, $dumper->Dump();
+  return sprintf '%s %s', $context, $dumper->Dump();
+}
+
+sub _pack_metadata {
+  my ( $metadata, $special, $banned, $metadata_name ) = @_;
+
+  $metadata      ||= {};
+  $special       ||= ['VERSION'];
+  $metadata_name ||= 'METADATA';
+  $banned        ||= [$metadata_name];
+
+  my @headers;
+
+  for my $banned_header ( @{$banned} ) {
+    next unless exists $metadata->{$banned_header};
+    die "Explicit metadata field $banned_header disallowed";
+  }
+
+  for my $special_header ( @{$special} ) {
+    next unless exists $metadata->{$special_header};
+    push @headers, _pack_variable( 'our', $special_header, delete $metadata->{$special_header} );
+  }
+
+  if ( keys %{$metadata} ) {
+    push @headers, _pack_variable( 'our', $metadata_name, $metadata );
+    for my $key ( sort keys %{$metadata} ) {
+      push @headers, 'our $' . $key . ' = $' . $metadata_name . '->{\'' . $key . '\'};' . qq[\n];
+    }
+  }
+  return join qq[], @headers;
 }
 
 1;
