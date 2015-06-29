@@ -111,11 +111,11 @@ sub _find_assets {
 }
 
 sub find_and_pack {
-  my ( $dir, $ns ) = @_;
+  my ( $dir, $ns, $libdir ) = @_;
   my %assets = _find_assets( $dir, $ns );
   my ( @ok, @fail, @unchanged );
   while ( my ( $module, $file ) = each %assets ) {
-    my $m = path( _module_full_path( $module, 'lib' ) );
+    my $m = path( _module_full_path( $module, $libdir ) );
     my $fd = try { $file->stat->mtime } catch { 0 };
     my $md = try { $m->stat->mtime } catch    { 0 };
     if ( $fd <= $md ) {
@@ -123,7 +123,7 @@ sub find_and_pack {
       next;
     }
     try {
-      write_module( $file, $module, 'lib' );
+      write_module( $file, $module, $libdir );
       push @ok, { module => $m, file => $file };
     }
     catch {
