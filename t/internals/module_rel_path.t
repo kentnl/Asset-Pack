@@ -5,7 +5,9 @@ use Test::More;
 
 # ABSTRACT: test module_rel_path
 
-use Asset::Pack qw( module_rel_path );
+use Asset::Pack;
+
+*module_rel_path = \&Asset::Pack::_module_rel_path;
 
 my %names = (
   'Foo'            => 'Foo.pm',

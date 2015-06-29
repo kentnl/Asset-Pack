@@ -38,15 +38,6 @@ a human (or analyzed if it fails as part of a build).
 
 =head1 FUNCTIONS
 
-=head2 C<module_rel_path>
-
-  module_rel_path(module) -> file_path (string)
-
-  module_rel_path("Foo::Bar") # "Foo/Bar.pm"
-
-Turns a module name (e.g. 'Foo::Bar') into a file path relative to a library
-directory root
-
 =head2 C<module_full_path>
 
   module_full_path(module, libdir) -> file_path (string)

@@ -15,7 +15,7 @@ our $VERSION = '0.000001';
 
 use parent qw(Exporter);
 our @EXPORT_OK = qw(
-  module_rel_path module_full_path
+  module_full_path
   pack_asset write_module
   find_assets find_and_pack
   pack_index write_index
@@ -29,7 +29,7 @@ sub _modulify {
   return $namespace . q[::] . $path;
 }
 
-sub module_rel_path {
+sub _module_rel_path {
   my ($module) = @_;
   $module =~ s{::}{/}g;
   return "${module}.pm";
@@ -38,7 +38,7 @@ sub module_rel_path {
 sub module_full_path {
   my ( $module, $libdir ) = @_;
   $libdir = './lib' if not defined $libdir;
-  return path($libdir)->child( module_rel_path($module) );
+  return path($libdir)->child( _module_rel_path($module) );
 }
 
 sub pack_asset {
@@ -199,15 +199,6 @@ your work easier.
 
 If anything fails it throws an exception. This is meant for scripts that will be tended by
 a human (or analyzed if it fails as part of a build).
-
-=func C<module_rel_path>
-
-  module_rel_path(module) -> file_path (string)
-
-  module_rel_path("Foo::Bar") # "Foo/Bar.pm"
-
-Turns a module name (e.g. 'Foo::Bar') into a file path relative to a library
-directory root
 
 =func C<module_full_path>
 
