@@ -214,3 +214,19 @@ See L</SYNOPSIS> and try it out!
   write_index({ "A" => "X.js" }, "Foo::Bar", "./");
 
 Creates a file index.
+
+=func C<find_and_pack>
+
+  find_and_pack( $root_dir, $namespace_prefix, $libdir ) -> Hash
+
+Creates copies of all the contents of C<$root_dir> and constructs
+( or reconstructs ) the relevant modules using C<$namespace_prefix>
+and stores them in C<$libdir> ( which defaults to C<./lib/> )
+
+Returns a hash detailing operations and results:
+
+  {
+    ok        => [ { module => ..., file => ... }, ... ],
+    unchanged => [ { module => ..., file => ... }, ... ],
+    fail      => [ { module => ..., file => ..., error => ... }, ... ],
+  }
