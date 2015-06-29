@@ -16,7 +16,7 @@ our $VERSION = '0.000001';
 use parent qw(Exporter);
 our @EXPORT_OK = qw(
   write_module
-  find_assets find_and_pack
+  find_and_pack
   pack_index write_index
 );
 
@@ -98,7 +98,7 @@ sub write_index {
   return;
 }
 
-sub find_assets {
+sub _find_assets {
   my ( $dir, $ns ) = @_;
   my $assets = path($dir);
   return %{
@@ -117,7 +117,7 @@ sub find_assets {
 
 sub find_and_pack {
   my ( $dir, $ns ) = @_;
-  my %assets = find_assets( $dir, $ns );
+  my %assets = _find_assets( $dir, $ns );
   my ( @ok, @fail, @unchanged );
   while ( my ( $module, $file ) = each %assets ) {
     my $m = path( _module_full_path( $module, 'lib' ) );
