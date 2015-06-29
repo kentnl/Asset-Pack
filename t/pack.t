@@ -13,10 +13,6 @@ use Test::Differences qw( eq_or_diff );
     'Foo' => 'Foo.pm',
     'Foo::Bar::B123' => 'Foo/Bar/B123.pm',
   );
-  note "Testing module_rel_path";
-  foreach my $k ( keys %names ) {
-    is( module_rel_path($k), $names{$k}, "$k resolves to where it should" );
-  }
   my @paths = ( 'foo/', '../foo/', '/foo/' );
   note "Testing module_full_path";
   foreach my $k ( keys %names ) {
