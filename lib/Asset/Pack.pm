@@ -15,7 +15,6 @@ our $VERSION = '0.000001';
 
 use parent qw(Exporter);
 our @EXPORT_OK = qw(
-  modulify
   module_rel_path module_full_path
   pack_asset write_module
   find_assets find_and_pack
@@ -24,7 +23,7 @@ our @EXPORT_OK = qw(
 
 our @EXPORT = qw(write_module find_and_pack);
 
-sub modulify {
+sub _modulify {
   my ( $path, $namespace ) = @_;
   $path =~ s/[[^:lower:]]//gi;
   return $namespace . q[::] . $path;
@@ -109,7 +108,7 @@ sub find_assets {
         my ( $path, $state ) = @_;
         return if $path->is_dir;
         my $rel = $path->relative($assets);
-        $state->{ modulify( $rel, $ns ) } = $rel;
+        $state->{ _modulify( $rel, $ns ) } = $rel;
         return;
       },
       { recurse => 1 },
