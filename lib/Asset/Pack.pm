@@ -44,8 +44,8 @@ sub module_full_path {
 
 sub pack_asset {
   my ( $module, $path, $metadata ) = @_;
-  my $content         = pack 'u', path($path)->slurp_raw;
-  my $metadata_header = _pack_metadata($metadata);
+  my $content = pack 'u', path($path)->slurp_raw;
+  my $metadata_header = _pack_metadata( $metadata, { add_banned => ['content'] } );
 
   return <<"EOF";
 package $module;
@@ -73,7 +73,7 @@ sub pack_index {
   }
   $metadata ||= {};
   $metadata->{index} = $index;
-  my $index_text = _pack_metadata($metadata);
+  my $index_text = _pack_metadata( $metadata, { add_special => ['index'] } );
   return <<"EOF";
 package $module;
 $index_text;
@@ -148,33 +148,42 @@ sub _pack_variable {
 }
 
 sub _pack_metadata {
-  my ( $metadata, $special, $banned, $metadata_name ) = @_;
+  my ( $metadata, $config ) = @_;
 
-  $metadata      ||= {};
-  $special       ||= ['VERSION'];
-  $metadata_name ||= 'METADATA';
-  $banned        ||= [$metadata_name];
+  $config ||= {};
+  $config->{special} ||= ['VERSION'];
+  $config->{metadata_name} = 'METADATA' if not exists $config->{metadata_name};
+  $config->{banned} ||= [ defined $config->{metadata_name} ? $config->{metadata_name} : () ];
+  push @{ $config->{banned} },  @{ $config->{add_banned} }  if $config->{add_banned};
+  push @{ $config->{special} }, @{ $config->{add_special} } if $config->{add_special};
 
   my @headers;
   $metadata->{PACKER} ||= {
-    name => __PACKAGE__,
+    name    => __PACKAGE__,
     version => "$VERSION",
   };
 
-  for my $banned_header ( @{$banned} ) {
+  for my $banned_header ( @{ $config->{banned} } ) {
     next unless exists $metadata->{$banned_header};
     die "Explicit metadata field $banned_header disallowed";
   }
 
-  for my $special_header ( @{$special} ) {
+  for my $special_header ( @{ $config->{special} } ) {
     next unless exists $metadata->{$special_header};
     push @headers, _pack_variable( 'our', $special_header, delete $metadata->{$special_header} );
   }
 
   if ( keys %{$metadata} ) {
-    push @headers, _pack_variable( 'our', $metadata_name, $metadata );
-    for my $key ( sort keys %{$metadata} ) {
-      push @headers, 'our $' . $key . ' = $' . $metadata_name . '->{\'' . $key . '\'};' . qq[\n];
+    if ( defined $config->{metadata_name} ) {
+      push @headers, _pack_variable( 'our', $config->{metadata_name}, $metadata );
+      for my $key ( sort keys %{$metadata} ) {
+        push @headers, 'our $' . $key . ' = $' . $config->{metadata_name} . '->{\'' . $key . '\'};' . qq[\n];
+      }
+    }
+    else {
+      for my $key ( sort keys %{$metadata} ) {
+        push @headers, _pack_variable( 'our', $key, $metadata->{$key} );
+      }
     }
   }
   return join qq[], @headers;
