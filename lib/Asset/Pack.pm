@@ -196,17 +196,15 @@ sub _pack_metadata {
     push @headers, _pack_variable( 'our', $special_header, delete $metadata->{$special_header} );
   }
 
-  if ( keys %{$metadata} ) {
-    if ( defined $config->{metadata_name} ) {
-      push @headers, _pack_variable( 'our', $config->{metadata_name}, $metadata );
-      for my $key ( sort keys %{$metadata} ) {
-        push @headers, 'our $' . $key . ' = $' . $config->{metadata_name} . '->{\'' . $key . '\'};' . qq[\n];
-      }
+  if ( defined $config->{metadata_name} ) {
+    push @headers, _pack_variable( 'our', $config->{metadata_name}, $metadata );
+    for my $key ( sort keys %{$metadata} ) {
+      push @headers, 'our $' . $key . ' = $' . $config->{metadata_name} . '->{\'' . $key . '\'};' . qq[\n];
     }
-    else {
-      for my $key ( sort keys %{$metadata} ) {
-        push @headers, _pack_variable( 'our', $key, $metadata->{$key} );
-      }
+  }
+  else {
+    for my $key ( sort keys %{$metadata} ) {
+      push @headers, _pack_variable( 'our', $key, $metadata->{$key} );
     }
   }
   return join q[], @headers;
