@@ -65,7 +65,8 @@ EOF
 }
 
 sub pack_index {
-  my ( $module, $index ) = @_;
+  my ( $module, $index, $variables ) = @_;
+  $index = { %{ $index || {} } };    # Shallow clone.
   for my $key ( keys %{$index} ) {
     next unless ref $index->{$key};
     if ( eval { $index->{$key}->isa('Path::Tiny') } ) {
