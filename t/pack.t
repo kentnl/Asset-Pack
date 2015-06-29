@@ -8,20 +8,7 @@ use Path::Tiny;
 use File::Temp qw(tempdir);
 use Asset::Pack qw(module_rel_path module_full_path pack_asset write_module);
 use Test::Differences qw( eq_or_diff );
-{
-  my %names = (
-    'Foo' => 'Foo.pm',
-    'Foo::Bar::B123' => 'Foo/Bar/B123.pm',
-  );
-  my @paths = ( 'foo/', '../foo/', '/foo/' );
-  note "Testing module_full_path";
-  foreach my $k ( keys %names ) {
-    foreach my $p (@paths) {
-      my $fp = module_full_path( $k, $p );
-      is( $fp, $p . $names{$k}, "$k resolves to the full path as it should" );
-    }
-  }
-}
+
 
 #pack_asset, write_module, unpack_asset
 note "Testing write_module, pack_asset, and module-self-unpack";
