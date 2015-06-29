@@ -38,20 +38,11 @@ a human (or analyzed if it fails as part of a build).
 
 =head1 FUNCTIONS
 
-=head2 C<pack_asset>
-
-  pack_asset($module, $path) -> byte_string
-
-  pack_asset("Foo::Bar", "./foo.js") # "ZnVuY3Rpb24oKXt9"
-
-Given a module name and the path of an asset to be packed, returns the new
-module with the content packed into the data section
-
 =head2 C<pack_index>
 
   pack_index($module, \%index) -> byte string
 
-  pack_asset("Foo::Index", { "Some::Name" => "foo.js" });
+  pack_index("Foo::Index", { "Some::Name" => "foo.js" });
 
 Creates the contents for an asset index
 

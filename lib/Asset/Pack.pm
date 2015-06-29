@@ -15,7 +15,7 @@ our $VERSION = '0.000001';
 
 use parent qw(Exporter);
 our @EXPORT_OK = qw(
-  pack_asset write_module
+  write_module
   find_assets find_and_pack
   pack_index write_index
 );
@@ -40,7 +40,7 @@ sub _module_full_path {
   return path($libdir)->child( _module_rel_path($module) );
 }
 
-sub pack_asset {
+sub _pack_asset {
   my ( $module, $path, $metadata ) = @_;
   my $content = pack 'u', path($path)->slurp_raw;
   my $metadata_header = _pack_metadata($metadata);
@@ -86,7 +86,7 @@ sub write_module {
   my ( $source, $module, $libdir, $metadata ) = @_;
   my $dest = _module_full_path( $module, $libdir );
   $dest->parent->mkpath;    # mkdir
-  $dest->spew_utf8( pack_asset( $module, $source, $metadata ) );
+  $dest->spew_utf8( _pack_asset( $module, $source, $metadata ) );
   return;
 }
 
@@ -199,20 +199,11 @@ your work easier.
 If anything fails it throws an exception. This is meant for scripts that will be tended by
 a human (or analyzed if it fails as part of a build).
 
-=func C<pack_asset>
-
-  pack_asset($module, $path) -> byte_string
-
-  pack_asset("Foo::Bar", "./foo.js") # "ZnVuY3Rpb24oKXt9"
-
-Given a module name and the path of an asset to be packed, returns the new
-module with the content packed into the data section
-
 =func C<pack_index>
 
   pack_index($module, \%index) -> byte string
 
-  pack_asset("Foo::Index", { "Some::Name" => "foo.js" });
+  pack_index("Foo::Index", { "Some::Name" => "foo.js" });
 
 Creates the contents for an asset index
 
