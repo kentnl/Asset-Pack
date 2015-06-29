@@ -147,6 +147,29 @@ sub _pack_variable {
   return sprintf '%s %s', $context, $dumper->Dump();
 }
 
+# _pack_metadata($metadata,$config) returns evalable code creating a
+# collection of `our` variables.
+#
+# Importantly, it sticks most of the content in a top level variable called METADATA
+# and then all the other `our` variables are declared in terms of that, by default.
+#
+# Additionally, a default value of PACKER = { ... } is injected into $metadata.
+#
+# config:
+#  special: Entries appearing in the "special" list will be declared before all others
+#           and will be excluded by default from $METADATA. The "special" list includes VERSION
+#           by default.
+#  metadata_name: Describes the name of the top level variable the primary data is stored in.
+#           If this is undef, then the top level $METADATA will be skipped, and all variables
+#           will be created directly the same way as <special> are. NOTE that this prevents
+#           variables from being cross-referenced.
+#  banned: Entries appearing in this list will cause a fatal error if entries by the same name
+#          occur in $metadata. This is a guard against users specifying variables that you
+#          may have alternative mechansims to declaring manually which can't be overridden.
+#          By default, this list contains <metadata_name>
+#  add_special: like <special>, but inherits the defaults.
+#  add_banned: like <banned>, but inherits the defaults.
+#
 sub _pack_metadata {
   my ( $metadata, $config ) = @_;
 
@@ -186,7 +209,7 @@ sub _pack_metadata {
       }
     }
   }
-  return join qq[], @headers;
+  return join q[], @headers;
 }
 
 1;
