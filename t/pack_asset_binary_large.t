@@ -32,19 +32,18 @@ sub mk_pack {
 
 my $tempdir = tempdir();
 my $binfile = path( $tempdir, 'binary_ranges.bin' );
+{
+  my $fh = $binfile->openw_raw;
 
-my $fh = $binfile->openw_raw;
-
-$fh->print("\nDouble\n");
-for my $first ( 0 .. 255 ) {
-  for my $second ( 0 .. 255 ) {
-    $fh->print( chr($first) . chr($second) );
-    if ( ( $first + $second ) % 10 == 0 ) {
-      print {$fh} "\n";
+  $fh->print("\nDouble\n");
+  for my $first ( 0 .. 255 ) {
+    for my $second ( 0 .. 255 ) {
+      print {$fh} chr for $first, $second;
+      print {$fh} "\n" if ( ( $first * 255 ) + $second ) % 10 == 0;
     }
   }
+  close $fh;
 }
-close $fh;
 my $packed_data = pack_asset( 'Test::X::BinaryRanges', "$binfile" );
 my $content_file = path( $tempdir, "TestXBinaryRanges.pm" );
 $content_file->spew_raw($packed_data);
