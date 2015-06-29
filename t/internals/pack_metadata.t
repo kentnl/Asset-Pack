@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Differences qw( eq_or_diff );
 
 # ABSTRACT: Test _pack_metadata
 
@@ -94,7 +93,7 @@ subtest "simple metadata w/ cycle + alt name" => sub {
   my $struct = { VERSION => '1.0', 'candies' => '5', hard => [] };
   $struct->{'lemons'} = $struct->{'hard'};
 
-  my $ref = mk_pack( pack_metadata($struct, { metadata_name => 'ALTMETA' } ) );
+  my $ref = mk_pack( pack_metadata( $struct, { metadata_name => 'ALTMETA' } ) );
   is_deeply( [ sort keys %{$ref} ], [ 'ALTMETA', 'PACKER', 'VERSION', 'candies', 'hard', 'lemons' ], 'Only expected vars' );
   is_deeply( $ref->{PACKER}, $packer_struct, 'PACKER is expected' );
   is( $ref->{candies}, '5', 'candies is expected' );
@@ -102,7 +101,6 @@ subtest "simple metadata w/ cycle + alt name" => sub {
   is_deeply( $ref->{lemons}, [], 'lemons is an empty array' );
   is( $ref->{hard}, $ref->{lemons}, 'hard and lemons share stringified forms( same ref )' );
 } or diag $last_pack;
-
 
 subtest "simple metadata w/ cycle + noMETADATA" => sub {
   my $struct = { VERSION => '1.0', 'candies' => '5', hard => [] };
@@ -143,6 +141,5 @@ subtest "simple metadata w/ cycle + add_special" => sub {
   ok( !exists $ref->{METADATA}->{VERSION}, 'VERSION not in METADATA' );
   ok( !exists $ref->{METADATA}->{candies}, 'candies not in METADATA' );
 } or diag $last_pack;
-
 
 done_testing;
