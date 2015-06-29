@@ -3,9 +3,11 @@ use warnings;
 
 use Test::More;
 
-use Asset::Pack qw(module_full_path);
+use Asset::Pack;
 
 # ABSTRACT: test module_full_path
+
+*module_full_path = \&Asset::Pack::_module_full_path;
 
 my %names = (
   'Foo'            => 'Foo.pm',

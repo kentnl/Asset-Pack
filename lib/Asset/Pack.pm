@@ -15,7 +15,6 @@ our $VERSION = '0.000001';
 
 use parent qw(Exporter);
 our @EXPORT_OK = qw(
-  module_full_path
   pack_asset write_module
   find_assets find_and_pack
   pack_index write_index
@@ -35,7 +34,7 @@ sub _module_rel_path {
   return "${module}.pm";
 }
 
-sub module_full_path {
+sub _module_full_path {
   my ( $module, $libdir ) = @_;
   $libdir = './lib' if not defined $libdir;
   return path($libdir)->child( _module_rel_path($module) );
@@ -85,7 +84,7 @@ EOF
 
 sub write_module {
   my ( $source, $module, $libdir, $metadata ) = @_;
-  my $dest = module_full_path( $module, $libdir );
+  my $dest = _module_full_path( $module, $libdir );
   $dest->parent->mkpath;    # mkdir
   $dest->spew_utf8( pack_asset( $module, $source, $metadata ) );
   return;
@@ -93,7 +92,7 @@ sub write_module {
 
 sub write_index {
   my ( $index, $module, $libdir, $metadata ) = @_;
-  my $dest = module_full_path( $module, $libdir );
+  my $dest = _module_full_path( $module, $libdir );
   $dest->parent->mkpath;
   $dest->spew_utf8( pack_index( $module, $index, $metadata ) );
   return;
@@ -121,7 +120,7 @@ sub find_and_pack {
   my %assets = find_assets( $dir, $ns );
   my ( @ok, @fail, @unchanged );
   while ( my ( $module, $file ) = each %assets ) {
-    my $m = path( module_full_path( $module, 'lib' ) );
+    my $m = path( _module_full_path( $module, 'lib' ) );
     my $fd = try { $file->stat->mtime } catch { 0 };
     my $md = try { $m->stat->mtime } catch    { 0 };
     if ( $fd <= $md ) {
@@ -199,14 +198,6 @@ your work easier.
 
 If anything fails it throws an exception. This is meant for scripts that will be tended by
 a human (or analyzed if it fails as part of a build).
-
-=func C<module_full_path>
-
-  module_full_path(module, libdir) -> file_path (string)
-
-  module_full_path("Foo::Bar", "./") # "./Foo/Bar.pm"
-
-Turns a module name and a library directory into a file path
 
 =func C<pack_asset>
 

@@ -38,14 +38,6 @@ a human (or analyzed if it fails as part of a build).
 
 =head1 FUNCTIONS
 
-=head2 C<module_full_path>
-
-  module_full_path(module, libdir) -> file_path (string)
-
-  module_full_path("Foo::Bar", "./") # "./Foo/Bar.pm"
-
-Turns a module name and a library directory into a file path
-
 =head2 C<pack_asset>
 
   pack_asset($module, $path) -> byte_string
