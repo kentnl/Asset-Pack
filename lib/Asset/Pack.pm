@@ -17,7 +17,7 @@ use parent qw(Exporter);
 our @EXPORT_OK = qw(
   write_module
   find_and_pack
-  pack_index write_index
+  write_index
 );
 
 our @EXPORT = qw(write_module find_and_pack);
@@ -60,7 +60,7 @@ $content
 EOF
 }
 
-sub pack_index {
+sub _pack_index {
   my ( $module, $index, $metadata ) = @_;
   $index = { %{ $index || {} } };    # Shallow clone.
   for my $key ( keys %{$index} ) {
@@ -94,7 +94,7 @@ sub write_index {
   my ( $index, $module, $libdir, $metadata ) = @_;
   my $dest = _module_full_path( $module, $libdir );
   $dest->parent->mkpath;
-  $dest->spew_utf8( pack_index( $module, $index, $metadata ) );
+  $dest->spew_utf8( _pack_index( $module, $index, $metadata ) );
   return;
 }
 
@@ -198,14 +198,6 @@ your work easier.
 
 If anything fails it throws an exception. This is meant for scripts that will be tended by
 a human (or analyzed if it fails as part of a build).
-
-=func C<pack_index>
-
-  pack_index($module, \%index) -> byte string
-
-  pack_index("Foo::Index", { "Some::Name" => "foo.js" });
-
-Creates the contents for an asset index
 
 =func C<write_module>
 

@@ -38,14 +38,6 @@ a human (or analyzed if it fails as part of a build).
 
 =head1 FUNCTIONS
 
-=head2 C<pack_index>
-
-  pack_index($module, \%index) -> byte string
-
-  pack_index("Foo::Index", { "Some::Name" => "foo.js" });
-
-Creates the contents for an asset index
-
 =head2 C<write_module>
 
   write_module($source, $module, $libdir)
