@@ -15,7 +15,7 @@ our $VERSION = '0.000001';
 
 use parent qw(Exporter);
 our @EXPORT_OK = qw();
-our @EXPORT = qw(write_module write_index find_and_pack);
+our @EXPORT    = qw(write_module write_index find_and_pack);
 
 sub _modulify {
   my ( $path, $namespace ) = @_;
