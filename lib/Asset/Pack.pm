@@ -70,7 +70,7 @@ sub pack_index {
   for my $key ( keys %{$index} ) {
     next unless ref $index->{$key};
     if ( eval { $index->{$key}->isa('Path::Tiny') } ) {
-      $index->{$key} = "$index";
+      $index->{$key} = "$index->{$key}";
       next;
     }
     die "Unsupported ref value in index for key $key: $index->{$key}";
