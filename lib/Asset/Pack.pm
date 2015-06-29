@@ -48,6 +48,8 @@ sub pack_asset {
   my $metadata_header = _pack_metadata( $metadata, { add_banned => ['content'] } );
 
   return <<"EOF";
+use strict;
+use warnings;
 package $module;
 $metadata_header
 our \$content = join q[], <DATA>;
