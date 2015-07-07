@@ -120,15 +120,15 @@ sub find_and_pack {
     my $fd        = try { $file_path->stat->mtime } catch { 0 };
     my $md = try { $m->stat->mtime } catch    { 0 };
     if ( $md > 0 and $fd <= $md ) {
-      push @unchanged, { module => $m, file => $file };
+      push @unchanged, { module => $module, module_path => $m, file => $file };
       next;
     }
     try {
       write_module( $file_path, $module, $libdir );
-      push @ok, { module => $m, file => $file };
+      push @ok, { module => $module, module_path => $m, file => $file };
     }
     catch {
-      push @fail, { module => $m, file => $file, error => $_ };
+      push @fail, { module => $module, module_path => $m, file => $file, error => $_ };
     };
   }
   return { ok => \@ok, fail => \@fail, unchanged => \@unchanged };
