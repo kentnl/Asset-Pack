@@ -19,7 +19,7 @@ our @EXPORT    = qw(write_module write_index find_and_pack);
 
 sub _modulify {
   my ( $path, $namespace ) = @_;
-  $path =~ s/[[^:lower:]]//gi;
+  $path =~ s/[^[:lower:]]//gi;
   return $namespace . q[::] . $path;
 }
 
