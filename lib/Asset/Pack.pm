@@ -119,7 +119,7 @@ sub find_and_pack {
     my $file_path = path($file)->absolute($dir);                     # Unconvert from relative.
     my $fd        = try { $file_path->stat->mtime } catch { 0 };
     my $md = try { $m->stat->mtime } catch    { 0 };
-    if ( $fd <= $md ) {
+    if ( $md > 0 and $fd <= $md ) {
       push @unchanged, { module => $m, file => $file };
       next;
     }
