@@ -4,7 +4,7 @@ use warnings;
 
 package Asset::Pack;
 
-use Path::Tiny qw( path );
+use Path::Tiny 0.069 qw( path );    # path()->visit without broken ref returns
 use Try::Tiny qw( try catch );
 
 our $VERSION = '0.000001';
