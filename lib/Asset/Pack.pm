@@ -116,14 +116,15 @@ sub find_and_pack {
   my ( @ok, @fail, @unchanged );
   while ( my ( $module, $file ) = each %assets ) {
     my $m = path( _module_full_path( $module, $libdir ) );
-    my $fd = try { $file->stat->mtime } catch { 0 };
+    my $file_path = path($file)->absolute($dir);                     # Unconvert from relative.
+    my $fd        = try { $file_path->stat->mtime } catch { 0 };
     my $md = try { $m->stat->mtime } catch    { 0 };
     if ( $fd <= $md ) {
       push @unchanged, { module => $m, file => $file };
       next;
     }
     try {
-      write_module( $file, $module, $libdir );
+      write_module( $file_path, $module, $libdir );
       push @ok, { module => $m, file => $file };
     }
     catch {
