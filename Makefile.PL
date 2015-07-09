@@ -33,11 +33,12 @@ my %WriteMakefileArgs = (
     "Test::Differences" => 0,
     "Test::Fatal" => 0,
     "Test::More" => "0.89",
+    "Test::Requires" => 0,
     "Test::TempDir::Tiny" => 0
   },
   "VERSION" => "0.000001",
   "test" => {
-    "TESTS" => "t/*.t t/00-compile/*.t t/internals/*.t"
+    "TESTS" => "t/*.t t/00-compile/*.t t/internals/*.t t/interop/*.t"
   }
 );
 
@@ -52,6 +53,7 @@ my %FallbackPrereqs = (
   "Test::Differences" => 0,
   "Test::Fatal" => 0,
   "Test::More" => "0.89",
+  "Test::Requires" => 0,
   "Test::TempDir::Tiny" => 0,
   "Try::Tiny" => 0,
   "parent" => 0,
