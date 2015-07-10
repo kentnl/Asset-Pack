@@ -302,7 +302,7 @@ __END__
     # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
     write_module('assets/foo.js','MyApp::Asset::FooJS','lib');
     # Or better still, this discovers them all and namespaces under MyApp::Asset
-    find_and_pack('assets', 'MyApp::Asset");
+    find_and_pack('assets', 'MyApp::Asset');
     # It also writes MyApp::Asset which is an index file
 
 =head1 DESCRIPTION
