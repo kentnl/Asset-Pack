@@ -19,9 +19,10 @@ our @EXPORT    = qw(write_module write_index find_and_pack);
 
 =func C<write_module>
 
-  write_module($source, $module, $libdir?, $metadata?)
+  # write_module( $source, $module, $libdir?, $metadata? );
 
-  write_module("./foo.js", "Foo::Bar", "./")
+  write_module( "./foo.js", "Foo::Bar", "./" );
+
   # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
 
 Given a source asset path, a module name and a library directory, packs the
@@ -31,7 +32,7 @@ to C<$libdir>
 Later, getting the file is simple:
 
   use Foo::Bar;
-  print $Foo::Bar::content; # File Content is a string.
+  print $Foo::Bar::content;    # File Content is a string.
 
 =head3 options:
 
@@ -61,9 +62,9 @@ sub write_module {
 
 =func C<write_index>
 
-  write_index($index, $module, $libdir?, $metadata? )
+  # write_index( $index, $module, $libdir?, $metadata? );
 
-  write_index({ "A" => "X.js" }, "Foo::Bar", "./");
+  write_index( { "A" => "X.js" }, "Foo::Bar", "./" );
 
 Creates a file index. This allows creation of a map of:
 
@@ -72,7 +73,7 @@ Creates a file index. This allows creation of a map of:
 Entries that will be available in a constructed module as follows:
 
   use Module::Name;
-  $Module::Name::index->{ "Module::Name" } # A String Path
+  $Module::Name::index->{"Module::Name"}    # A String Path
 
 These generated files do B<NOT> have a C<__DATA__> section
 
@@ -104,7 +105,7 @@ sub write_index {
 
 =func C<find_and_pack>
 
-  find_and_pack( $root_dir, $namespace_prefix, $libdir ) -> Hash
+  # find_and_pack( $root_dir, $namespace_prefix, $libdir? ) -> Hash
 
 Creates copies of all the contents of C<$root_dir> and constructs
 ( or reconstructs ) the relevant modules using C<$namespace_prefix>
@@ -299,10 +300,13 @@ __END__
 
     #!/usr/bin/env perl
     use Asset::Pack;
+
     # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
-    write_module('assets/foo.js','MyApp::Asset::FooJS','lib');
+    write_module( 'assets/foo.js', 'MyApp::Asset::FooJS', 'lib' );
+
     # Or better still, this discovers them all and namespaces under MyApp::Asset
-    find_and_pack('assets', 'MyApp::Asset');
+    find_and_pack( 'assets', 'MyApp::Asset' );
+
     # It also writes MyApp::Asset which is an index file
 
 =head1 DESCRIPTION
