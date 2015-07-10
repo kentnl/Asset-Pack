@@ -58,6 +58,48 @@ sub write_index {
   return;
 }
 
+=func C<find_and_pack>
+
+  find_and_pack( $root_dir, $namespace_prefix, $libdir ) -> Hash
+
+Creates copies of all the contents of C<$root_dir> and constructs
+( or reconstructs ) the relevant modules using C<$namespace_prefix>
+and stores them in C<$libdir> ( which defaults to C<./lib/> )
+
+Returns a hash detailing operations and results:
+
+  {
+    ok        => [ { module => ..., file => ... }, ... ],
+    unchanged => [ { module => ..., file => ... }, ... ],
+    fail      => [ { module => ..., file => ..., error => ... }, ... ],
+  }
+
+=cut
+
+sub find_and_pack {
+  my ( $dir, $ns, $libdir ) = @_;
+  my %assets = _find_assets( $dir, $ns );
+  my ( @ok, @fail, @unchanged );
+  while ( my ( $module, $file ) = each %assets ) {
+    my $m         = path( _module_full_path( $module, $libdir ) );
+    my $file_path = path($file)->absolute($dir);                     # Unconvert from relative.
+    my $fd        = try { $file_path->stat->mtime } catch { 0 };
+    my $md        = try { $m->stat->mtime } catch { 0 };
+    if ( $md > 0 and $fd <= $md ) {
+      push @unchanged, { module => $module, module_path => $m, file => "$file", file_path => $file_path };
+      next;
+    }
+    try {
+      write_module( $file_path, $module, $libdir );
+      push @ok, { module => $module, module_path => $m, file => "$file", file_path => $file_path };
+    }
+    catch {
+      push @fail, { module => $module, module_path => $m, file => "$file", file_path => $file_path, error => $_ };
+    };
+  }
+  return { ok => \@ok, fail => \@fail, unchanged => \@unchanged };
+}
+
 sub _modulify {
   my ( $path, $namespace ) = @_;
   $path =~ s/[^[:lower:]]//gi;
@@ -133,48 +175,6 @@ sub _find_assets {
       { recurse => 1 },
     );
   };
-}
-
-=func C<find_and_pack>
-
-  find_and_pack( $root_dir, $namespace_prefix, $libdir ) -> Hash
-
-Creates copies of all the contents of C<$root_dir> and constructs
-( or reconstructs ) the relevant modules using C<$namespace_prefix>
-and stores them in C<$libdir> ( which defaults to C<./lib/> )
-
-Returns a hash detailing operations and results:
-
-  {
-    ok        => [ { module => ..., file => ... }, ... ],
-    unchanged => [ { module => ..., file => ... }, ... ],
-    fail      => [ { module => ..., file => ..., error => ... }, ... ],
-  }
-
-=cut
-
-sub find_and_pack {
-  my ( $dir, $ns, $libdir ) = @_;
-  my %assets = _find_assets( $dir, $ns );
-  my ( @ok, @fail, @unchanged );
-  while ( my ( $module, $file ) = each %assets ) {
-    my $m = path( _module_full_path( $module, $libdir ) );
-    my $file_path = path($file)->absolute($dir);                     # Unconvert from relative.
-    my $fd        = try { $file_path->stat->mtime } catch { 0 };
-    my $md = try { $m->stat->mtime } catch    { 0 };
-    if ( $md > 0 and $fd <= $md ) {
-      push @unchanged, { module => $module, module_path => $m, file => "$file", file_path => $file_path };
-      next;
-    }
-    try {
-      write_module( $file_path, $module, $libdir );
-      push @ok, { module => $module, module_path => $m, file => "$file", file_path => $file_path };
-    }
-    catch {
-      push @fail, { module => $module, module_path => $m, file => "$file", file_path => $file_path, error => $_ };
-    };
-  }
-  return { ok => \@ok, fail => \@fail, unchanged => \@unchanged };
 }
 
 sub _pack_variable {
