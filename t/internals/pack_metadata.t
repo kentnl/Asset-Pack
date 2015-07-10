@@ -161,4 +161,18 @@ subtest "simple metadata + self-mixed variables w/ cycle" => sub {
 
 } or diag $last_pack;
 
+subtest "simple metadata + hash variable" => sub {
+  my $struct = { VERSION => '1.0', myhash => { happy => 1 } };
+
+  my $ref = mk_pack( pack_metadata( $struct, [qw( %myhash )] ) );
+  note explain $ref;
+  my (@expected) = ( 'VERSION', 'meta', '%myhash' );
+  eq_or_diff( [ sort keys %{$ref} ], [ sort @expected ], 'Only expected vars' );
+  is_deeply( $ref->{meta}->{PACKER}, $packer_struct, 'PACKER is expected' );
+  is_deeply( $ref->{meta}->{myhash}, { happy => 1 }, 'myhash expected' );
+
+  eq_or_diff( $ref->{'%myhash'}, { happy => 1 }, '%myhash is expected structure' );
+
+} or diag $last_pack;
+
 done_testing;
