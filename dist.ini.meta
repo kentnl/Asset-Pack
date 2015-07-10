@@ -14,6 +14,7 @@ bumpversions      = 1
 srcreadme         = pod
 -remove           = Author::KENTNL::RecommendFixes
 -remove           = MetaData::BuiltWith
+PodWeaver.replacer = replace_with_comment
 
 [Munge::Whitespace]
 filename = LICENSE
