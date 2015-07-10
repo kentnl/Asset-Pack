@@ -77,6 +77,21 @@ EOF
 
 }
 
+=func C<write_module>
+
+  write_module($source, $module, $libdir)
+
+  write_module("./foo.js", "Foo::Bar", "./")
+  # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
+
+Given a source asset path, a module name and a library directory, packs the
+source into a module named C<$module> and saves it in the right place relative
+to C<$libdir>
+
+See L</SYNOPSIS> and try it out!
+
+=cut
+
 sub write_module {
   my ( $source, $module, $libdir, $metadata ) = @_;
   my $dest = _module_full_path( $module, $libdir );
@@ -84,6 +99,16 @@ sub write_module {
   $dest->spew_utf8( _pack_asset( $module, $source, $metadata ) );
   return;
 }
+
+=func C<write_index>
+
+  write_index($index, $module, $libdir )
+
+  write_index({ "A" => "X.js" }, "Foo::Bar", "./");
+
+Creates a file index.
+
+=cut
 
 sub write_index {
   my ( $index, $module, $libdir, $metadata ) = @_;
@@ -109,6 +134,24 @@ sub _find_assets {
     );
   };
 }
+
+=func C<find_and_pack>
+
+  find_and_pack( $root_dir, $namespace_prefix, $libdir ) -> Hash
+
+Creates copies of all the contents of C<$root_dir> and constructs
+( or reconstructs ) the relevant modules using C<$namespace_prefix>
+and stores them in C<$libdir> ( which defaults to C<./lib/> )
+
+Returns a hash detailing operations and results:
+
+  {
+    ok        => [ { module => ..., file => ... }, ... ],
+    unchanged => [ { module => ..., file => ... }, ... ],
+    fail      => [ { module => ..., file => ..., error => ... }, ... ],
+  }
+
+=cut
 
 sub find_and_pack {
   my ( $dir, $ns, $libdir ) = @_;
@@ -219,43 +262,6 @@ your work easier.
 
 If anything fails it throws an exception. This is meant for scripts that will be tended by
 a human (or analyzed if it fails as part of a build).
-
-=func C<write_module>
-
-  write_module($source, $module, $libdir)
-
-  write_module("./foo.js", "Foo::Bar", "./")
-  # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
-
-Given a source asset path, a module name and a library directory, packs the
-source into a module named C<$module> and saves it in the right place relative
-to C<$libdir>
-
-See L</SYNOPSIS> and try it out!
-
-=func C<write_index>
-
-  write_index($index, $module, $libdir )
-
-  write_index({ "A" => "X.js" }, "Foo::Bar", "./");
-
-Creates a file index.
-
-=func C<find_and_pack>
-
-  find_and_pack( $root_dir, $namespace_prefix, $libdir ) -> Hash
-
-Creates copies of all the contents of C<$root_dir> and constructs
-( or reconstructs ) the relevant modules using C<$namespace_prefix>
-and stores them in C<$libdir> ( which defaults to C<./lib/> )
-
-Returns a hash detailing operations and results:
-
-  {
-    ok        => [ { module => ..., file => ... }, ... ],
-    unchanged => [ { module => ..., file => ... }, ... ],
-    fail      => [ { module => ..., file => ..., error => ... }, ... ],
-  }
 
 =head1 SEE ALSO
 
