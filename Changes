@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+ [Internals]
+ - Generated modules use a slightly more efficient initial DATA -> Scalar slurp
 
 0.000001 2015-07-10T09:11:42Z 1b264d6
  - Initial release.

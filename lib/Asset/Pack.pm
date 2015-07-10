@@ -187,7 +187,7 @@ use strict;
 use warnings;
 package $module;
 $metadata_header
-our \$content = join q[], <DATA>;
+our \$content = do { local \$/; <DATA> };
 close *DATA;
 \$content =~ s/\\s+//g;
 \$content = unpack 'u', \$content;
