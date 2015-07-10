@@ -19,7 +19,7 @@ our @EXPORT    = qw(write_module write_index find_and_pack);
 
 =func C<write_module>
 
-  write_module($source, $module, $libdir)
+  write_module($source, $module, $libdir?, $metadata?)
 
   write_module("./foo.js", "Foo::Bar", "./")
   # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
@@ -28,7 +28,26 @@ Given a source asset path, a module name and a library directory, packs the
 source into a module named C<$module> and saves it in the right place relative
 to C<$libdir>
 
-See L</SYNOPSIS> and try it out!
+Later, getting the file is simple:
+
+  use Foo::Bar;
+  print $Foo::Bar::content; # File Content is a string.
+
+=head3 options:
+
+=over 4
+
+=item C<$source> - A path describing where the asset is found
+
+=item C<$module> - A target name for the generated module
+
+=item C<$libdir> B<[optional]> - A target directory to serve as a base for modules.
+
+Defaults to C<./lib>.
+
+=item C<$metadata> B<[optional]> - A C<HashRef> payload of additional data to store in the module.
+
+=back
 
 =cut
 
