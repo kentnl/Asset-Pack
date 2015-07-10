@@ -15,6 +15,7 @@ srcreadme         = pod
 -remove           = Author::KENTNL::RecommendFixes
 -remove           = MetaData::BuiltWith
 PodWeaver.replacer = replace_with_comment
+PodWeaver.post_code_replacer = replace_with_blank
 
 [Munge::Whitespace]
 filename = LICENSE
