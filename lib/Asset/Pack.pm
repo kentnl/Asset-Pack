@@ -150,10 +150,13 @@ sub _pack_variable {
 # and creates `our $VERSION` when VERSION is in metadata.
 #
 # Additionally, a default value of PACKER = { ... } is injected into $meta.
-
+#
+# Any tokens in the arrayref $variables will become natural variables in the package:
+#
+# _pack_metadata( { hello => { key => value } }, [qw( %hello @world $example )] );
 sub _pack_metadata {
-  my ( $metadata, ) = @_;
-
+  my ( $metadata, $variables ) = @_;
+  my $reserved = { '$VERSION' => 1, '$meta' => 1 };    ## no critic (RequireInterpolationOfMetachars)
   $metadata->{PACKER} ||= {
     name    => __PACKAGE__,
     version => "$VERSION",
@@ -163,6 +166,28 @@ sub _pack_metadata {
     push @headers, _pack_variable( 'our', 'VERSION', delete $metadata->{'VERSION'} );
   }
   push @headers, _pack_variable( 'our', 'meta', $metadata );
+  for my $variable ( @{ $variables || [] } ) {
+    $variable = "\$$variable" unless $variable =~ /\A[%\$@]/;
+    die "Illegal variable name $variable" unless $variable =~ /\A[@%\$]?[[:alpha:]_]/;
+    die "Reserved variable name $variable" if exists $reserved->{$variable};
+
+    if ( $variable =~ /\A\@(.*$)/ ) {
+      ## no critic (RequireInterpolationOfMetachars)
+      push @headers, 'our ' . $variable . ' = @{ $meta->{\'' . $1 . '\'} };' . qq[\n];
+      next;
+    }
+    if ( $variable =~ /\A\%(.*$)/ ) {
+      ## no critic (RequireInterpolationOfMetachars)
+      push @headers, 'our ' . $variable . ' = %{ $meta->{\'' . $1 . '\'} };' . qq[\n];
+      next;
+    }
+    if ( $variable =~ /\A\$(.*$)/ ) {
+      ## no critic (RequireInterpolationOfMetachars)
+      push @headers, 'our ' . $variable . ' = $meta->{\'' . $1 . '\'};' . qq[\n];
+      next;
+    }
+    die "Unhandled variable $variable";
+  }
   return join q[], @headers;
 }
 
