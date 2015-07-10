@@ -40,6 +40,23 @@ sub write_module {
   return;
 }
 
+=func C<write_index>
+
+  write_index($index, $module, $libdir )
+
+  write_index({ "A" => "X.js" }, "Foo::Bar", "./");
+
+Creates a file index.
+
+=cut
+
+sub write_index {
+  my ( $index, $module, $libdir, $metadata ) = @_;
+  my $dest = _module_full_path( $module, $libdir );
+  $dest->parent->mkpath;
+  $dest->spew_utf8( _pack_index( $module, $index, $metadata ) );
+  return;
+}
 
 sub _modulify {
   my ( $path, $namespace ) = @_;
@@ -99,24 +116,6 @@ $index_text;
 1;
 EOF
 
-}
-
-=func C<write_index>
-
-  write_index($index, $module, $libdir )
-
-  write_index({ "A" => "X.js" }, "Foo::Bar", "./");
-
-Creates a file index.
-
-=cut
-
-sub write_index {
-  my ( $index, $module, $libdir, $metadata ) = @_;
-  my $dest = _module_full_path( $module, $libdir );
-  $dest->parent->mkpath;
-  $dest->spew_utf8( _pack_index( $module, $index, $metadata ) );
-  return;
 }
 
 sub _find_assets {
