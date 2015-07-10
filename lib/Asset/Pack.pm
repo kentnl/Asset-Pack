@@ -17,6 +17,30 @@ use parent qw(Exporter);
 our @EXPORT_OK = qw();
 our @EXPORT    = qw(write_module write_index find_and_pack);
 
+=func C<write_module>
+
+  write_module($source, $module, $libdir)
+
+  write_module("./foo.js", "Foo::Bar", "./")
+  # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
+
+Given a source asset path, a module name and a library directory, packs the
+source into a module named C<$module> and saves it in the right place relative
+to C<$libdir>
+
+See L</SYNOPSIS> and try it out!
+
+=cut
+
+sub write_module {
+  my ( $source, $module, $libdir, $metadata ) = @_;
+  my $dest = _module_full_path( $module, $libdir );
+  $dest->parent->mkpath;    # mkdir
+  $dest->spew_utf8( _pack_asset( $module, $source, $metadata ) );
+  return;
+}
+
+
 sub _modulify {
   my ( $path, $namespace ) = @_;
   $path =~ s/[^[:lower:]]//gi;
@@ -75,29 +99,6 @@ $index_text;
 1;
 EOF
 
-}
-
-=func C<write_module>
-
-  write_module($source, $module, $libdir)
-
-  write_module("./foo.js", "Foo::Bar", "./")
-  # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
-
-Given a source asset path, a module name and a library directory, packs the
-source into a module named C<$module> and saves it in the right place relative
-to C<$libdir>
-
-See L</SYNOPSIS> and try it out!
-
-=cut
-
-sub write_module {
-  my ( $source, $module, $libdir, $metadata ) = @_;
-  my $dest = _module_full_path( $module, $libdir );
-  $dest->parent->mkpath;    # mkdir
-  $dest->spew_utf8( _pack_asset( $module, $source, $metadata ) );
-  return;
 }
 
 =func C<write_index>
