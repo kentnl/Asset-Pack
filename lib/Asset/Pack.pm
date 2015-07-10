@@ -118,6 +118,20 @@ Returns a hash detailing operations and results:
     fail      => [ { module => ..., file => ..., error => ... }, ... ],
   }
 
+=head3 options:
+
+=over 4
+
+=item C<$root_dir> - The base path where the assets to be packed are stored
+
+=item C<$namespace_prefix> - A module name like C<My::Asset> which will be used as the parent for generated modules.
+
+=item C<$libdir> B<[optional]> - The target directory to generate the Modules in.
+
+Defaults to C<./lib>.
+
+=back
+
 =cut
 
 sub find_and_pack {
