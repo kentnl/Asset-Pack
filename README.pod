@@ -75,6 +75,51 @@ Returns a hash detailing operations and results:
     fail      => [ { module => ..., file => ..., error => ... }, ... ],
   }
 
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<< C<App::FatPacker>|App::FatPacker >>
+
+C<App::FatPacker> is the primary module C<Asset::Pack> is targeted at. C<AssetPack>
+creates C<Perl Modules> in a format compatible with C<App::FatPacker> to enable embedding
+arbitrary resources in your single-file application.
+
+=item * L<< C<App::Implode>|App::Implode >>
+
+C<App::Implode> is like C<App::FatPacker>, except uses L<< C<Carton>|Carton >> and C<cpanfile>'s
+to build your app tree. This should be compatible with C<Asset::Pack> and bugs involving it will
+certainly be looked into.
+
+=item * L<< C<App::FatPacker::Simple>|App::FatPacker::Simple >>
+
+Again, Similar in intent to C<App::FatPacker>, offering a few different features, but
+is more manually operated. This module may work in conjunction with it.
+
+=item * L<< C<Module::FatPack>|Module::FatPack >>
+
+Similar goals as C<App::FatPacker>, but not quite so well engineered. This code will
+probably work with that, but is at this time officially unsupported.
+
+=item * L<< C<Module::DataPack>|Module::DataPack >>
+
+This is basically a clone of C<Module::FatPack> except has the blobs stored in your scripts
+C<__DATA__> section instead of being a hash of strings.
+
+Given this module I<also> exploits C<__DATA__>, there may be potential risks involved with this module.
+And as such, this is not presently officially supported, nor has it been tested.
+
+=item * L<< C<Data::Embed>|Data::Embed >>
+
+C<Data::Embed> is probably more similar than all the rest listed to what C<Asset::Pack> does,
+except: it doesn't use built-in C<Perl> mechanics, will probably not be C<FatPacker> friendly, and its
+implementation relies on C<Data::Embed> being present to extract embedded data.
+
+Whereas C<Asset::Pack> is implemented as a simple C<Perl Module> building utility, which generates
+independent files which will perform like native C<Perl Module>'s when used.
+
+=back
+
 =head1 AUTHOR
 
 James Laver <james.laver@gmail.com>
