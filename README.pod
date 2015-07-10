@@ -72,11 +72,36 @@ Defaults to C<./lib>.
 
 =head2 C<write_index>
 
-  write_index($index, $module, $libdir )
+  write_index($index, $module, $libdir?, $metadata? )
 
   write_index({ "A" => "X.js" }, "Foo::Bar", "./");
 
-Creates a file index.
+Creates a file index. This allows creation of a map of:
+
+  "Module::Name" => "/Source/Path"
+
+Entries that will be available in a constructed module as follows:
+
+  use Module::Name;
+  $Module::Name::index->{ "Module::Name" } # A String Path
+
+These generated files do B<NOT> have a C<__DATA__> section
+
+=head3 options:
+
+=over 4
+
+=item C<$source> - A path describing where the asset is found
+
+=item C<$module> - A target name for the generated module
+
+=item C<$libdir> B<[optional]> - A target directory to serve as a base for modules.
+
+Defaults to C<./lib>.
+
+=item C<$metadata> B<[optional]> - A C<HashRef> payload of additional data to store in the module.
+
+=back
 
 =head2 C<find_and_pack>
 
