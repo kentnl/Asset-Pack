@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.000002 2015-07-11T05:00:03Z a542c60
  [Features / find_and_pack indexes]
  - find_and_pack now generates the promised pack index as the root namespace.
  - Index will be updated oppurtunitistically when there are no fails and there are file updates being performed.
