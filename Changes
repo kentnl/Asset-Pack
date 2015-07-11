@@ -1,6 +1,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+ [Features / find_and_pack indexes]
+ - find_and_pack now generates the promised pack index as the root namespace.
+ - Index will be updated oppurtunitistically when there are no fails and there are file updates being performed.
+
  [Internals]
  - Generated modules use a slightly more efficient initial DATA -> Scalar slurp
 

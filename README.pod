@@ -22,6 +22,11 @@ version 0.000002
     find_and_pack( 'assets', 'MyApp::Asset' );
 
     # It also writes MyApp::Asset which is an index file
+    require MyApp::Asset;
+
+    # ::examplejs was built from ./assets/example.js
+    # $filename => example.js
+    my $filename = $MyApp::Asset::index->{'MyApp::Asset::examplejs'};
 
 =head1 DESCRIPTION
 
@@ -115,6 +120,9 @@ Creates copies of all the contents of C<$root_dir> and constructs
 ( or reconstructs ) the relevant modules using C<$namespace_prefix>
 and stores them in C<$libdir> ( which defaults to C<./lib/> )
 
+B<Since 0.000002>:
+Also generates an "index" file ( See L<< C<write_index>|/write_index >> ) at the name C<$namespace_prefix>.
+
 Returns a hash detailing operations and results:
 
   {
@@ -122,6 +130,8 @@ Returns a hash detailing operations and results:
     unchanged => [ { module => ..., file => ... }, ... ],
     fail      => [ { module => ..., file => ..., error => ... }, ... ],
   }
+
+Index updates will be in above list except with C<< index => 1 >> instead of C<< file => >>
 
 =head3 options:
 

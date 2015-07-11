@@ -111,6 +111,9 @@ Creates copies of all the contents of C<$root_dir> and constructs
 ( or reconstructs ) the relevant modules using C<$namespace_prefix>
 and stores them in C<$libdir> ( which defaults to C<./lib/> )
 
+B<Since 0.000002>:
+Also generates an "index" file ( See L<< C<write_index>|/write_index >> ) at the name C<$namespace_prefix>.
+
 Returns a hash detailing operations and results:
 
   {
@@ -118,6 +121,8 @@ Returns a hash detailing operations and results:
     unchanged => [ { module => ..., file => ... }, ... ],
     fail      => [ { module => ..., file => ..., error => ... }, ... ],
   }
+
+Index updates will be in above list except with C<< index => 1 >> instead of C<< file => >>
 
 =head3 options:
 
@@ -155,6 +160,30 @@ sub find_and_pack {
     catch {
       push @fail, { module => $module, module_path => $m, file => "$file", file_path => $file_path, error => $_ };
     };
+  }
+  my $index_path = path( _module_full_path( $ns, $libdir ) );
+  my $index_return = { module => $ns, module_path => $index_path, index => 1 };
+
+  if (@fail) {
+
+    # Any fails -> No Attempt
+    $index_return->{error} = 'A module failed prior to index generation';
+    push @fail, $index_return;
+  }
+  elsif ( not @ok and not -e $index_path ) {
+
+    # No "ok" results only generate index if one does not exist.
+    write_index( \%assets, $ns, $libdir, );
+    push @ok, $index_return;
+  }
+  elsif (@ok) {
+
+    # Any ok results generate index.
+    write_index( \%assets, $ns, $libdir, );
+    push @ok, $index_return;
+  }
+  else {
+    push @unchanged, $index_return;
   }
   return { ok => \@ok, fail => \@fail, unchanged => \@unchanged };
 }
@@ -308,6 +337,11 @@ __END__
     find_and_pack( 'assets', 'MyApp::Asset' );
 
     # It also writes MyApp::Asset which is an index file
+    require MyApp::Asset;
+
+    # ::examplejs was built from ./assets/example.js
+    # $filename => example.js
+    my $filename = $MyApp::Asset::index->{'MyApp::Asset::examplejs'};
 
 =head1 DESCRIPTION
 
