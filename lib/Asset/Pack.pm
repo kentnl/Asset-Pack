@@ -7,7 +7,7 @@ package Asset::Pack;
 use Path::Tiny 0.069 qw( path );    # path()->visit without broken ref returns
 use Try::Tiny qw( try catch );
 
-our $VERSION = '0.000001';
+our $VERSION = '0.000002';
 
 # ABSTRACT: Easily pack assets into Perl Modules that can be fat-packed
 
@@ -19,9 +19,10 @@ our @EXPORT    = qw(write_module write_index find_and_pack);
 
 #pod =func C<write_module>
 #pod
-#pod   write_module($source, $module, $libdir?, $metadata?)
+#pod   # write_module( $source, $module, $libdir?, $metadata? );
 #pod
-#pod   write_module("./foo.js", "Foo::Bar", "./")
+#pod   write_module( "./foo.js", "Foo::Bar", "./" );
+#pod
 #pod   # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
 #pod
 #pod Given a source asset path, a module name and a library directory, packs the
@@ -31,7 +32,7 @@ our @EXPORT    = qw(write_module write_index find_and_pack);
 #pod Later, getting the file is simple:
 #pod
 #pod   use Foo::Bar;
-#pod   print $Foo::Bar::content; # File Content is a string.
+#pod   print $Foo::Bar::content;    # File Content is a string.
 #pod
 #pod =head3 options:
 #pod
@@ -61,9 +62,9 @@ sub write_module {
 
 #pod =func C<write_index>
 #pod
-#pod   write_index($index, $module, $libdir?, $metadata? )
+#pod   # write_index( $index, $module, $libdir?, $metadata? );
 #pod
-#pod   write_index({ "A" => "X.js" }, "Foo::Bar", "./");
+#pod   write_index( { "A" => "X.js" }, "Foo::Bar", "./" );
 #pod
 #pod Creates a file index. This allows creation of a map of:
 #pod
@@ -72,7 +73,7 @@ sub write_module {
 #pod Entries that will be available in a constructed module as follows:
 #pod
 #pod   use Module::Name;
-#pod   $Module::Name::index->{ "Module::Name" } # A String Path
+#pod   $Module::Name::index->{"Module::Name"}    # A String Path
 #pod
 #pod These generated files do B<NOT> have a C<__DATA__> section
 #pod
@@ -104,11 +105,14 @@ sub write_index {
 
 #pod =func C<find_and_pack>
 #pod
-#pod   find_and_pack( $root_dir, $namespace_prefix, $libdir ) -> Hash
+#pod   # find_and_pack( $root_dir, $namespace_prefix, $libdir? ) -> Hash
 #pod
 #pod Creates copies of all the contents of C<$root_dir> and constructs
 #pod ( or reconstructs ) the relevant modules using C<$namespace_prefix>
 #pod and stores them in C<$libdir> ( which defaults to C<./lib/> )
+#pod
+#pod B<Since 0.000002>:
+#pod Also generates an "index" file ( See L<< C<write_index>|/write_index >> ) at the name C<$namespace_prefix>.
 #pod
 #pod Returns a hash detailing operations and results:
 #pod
@@ -117,6 +121,8 @@ sub write_index {
 #pod     unchanged => [ { module => ..., file => ... }, ... ],
 #pod     fail      => [ { module => ..., file => ..., error => ... }, ... ],
 #pod   }
+#pod
+#pod Index updates will be in above list except with C<< index => 1 >> instead of C<< file => >>
 #pod
 #pod =head3 options:
 #pod
@@ -155,6 +161,30 @@ sub find_and_pack {
       push @fail, { module => $module, module_path => $m, file => "$file", file_path => $file_path, error => $_ };
     };
   }
+  my $index_path = path( _module_full_path( $ns, $libdir ) );
+  my $index_return = { module => $ns, module_path => $index_path, index => 1 };
+
+  if (@fail) {
+
+    # Any fails -> No Attempt
+    $index_return->{error} = 'A module failed prior to index generation';
+    push @fail, $index_return;
+  }
+  elsif ( not @ok and not -e $index_path ) {
+
+    # No "ok" results only generate index if one does not exist.
+    write_index( \%assets, $ns, $libdir, );
+    push @ok, $index_return;
+  }
+  elsif (@ok) {
+
+    # Any ok results generate index.
+    write_index( \%assets, $ns, $libdir, );
+    push @ok, $index_return;
+  }
+  else {
+    push @unchanged, $index_return;
+  }
   return { ok => \@ok, fail => \@fail, unchanged => \@unchanged };
 }
 
@@ -186,7 +216,7 @@ use strict;
 use warnings;
 package $module;
 $metadata_header
-our \$content = join q[], <DATA>;
+our \$content = do { local \$/; <DATA> };
 close *DATA;
 \$content =~ s/\\s+//g;
 \$content = unpack 'u', \$content;
@@ -306,17 +336,25 @@ Asset::Pack - Easily pack assets into Perl Modules that can be fat-packed
 
 =head1 VERSION
 
-version 0.000001
+version 0.000002
 
 =head1 SYNOPSIS
 
     #!/usr/bin/env perl
     use Asset::Pack;
+
     # lib/MyApp/Asset/FooJS.pm will embed assets/foo.js
-    write_module('assets/foo.js','MyApp::Asset::FooJS','lib');
+    write_module( 'assets/foo.js', 'MyApp::Asset::FooJS', 'lib' );
+
     # Or better still, this discovers them all and namespaces under MyApp::Asset
-    find_and_pack('assets', 'MyApp::Asset");
+    find_and_pack( 'assets', 'MyApp::Asset' );
+
     # It also writes MyApp::Asset which is an index file
+    require MyApp::Asset;
+
+    # ::examplejs was built from ./assets/example.js
+    # $filename => example.js
+    my $filename = $MyApp::Asset::index->{'MyApp::Asset::examplejs'};
 
 =head1 DESCRIPTION
 
@@ -338,9 +376,10 @@ a human (or analyzed if it fails as part of a build).
 
 =head2 C<write_module>
 
-  write_module($source, $module, $libdir?, $metadata?)
+  # write_module( $source, $module, $libdir?, $metadata? );
 
-  write_module("./foo.js", "Foo::Bar", "./")
+  write_module( "./foo.js", "Foo::Bar", "./" );
+
   # ./Foo/Bar.pm now contains a uuencoded copy of foo.js
 
 Given a source asset path, a module name and a library directory, packs the
@@ -350,7 +389,7 @@ to C<$libdir>
 Later, getting the file is simple:
 
   use Foo::Bar;
-  print $Foo::Bar::content; # File Content is a string.
+  print $Foo::Bar::content;    # File Content is a string.
 
 =head3 options:
 
@@ -370,9 +409,9 @@ Defaults to C<./lib>.
 
 =head2 C<write_index>
 
-  write_index($index, $module, $libdir?, $metadata? )
+  # write_index( $index, $module, $libdir?, $metadata? );
 
-  write_index({ "A" => "X.js" }, "Foo::Bar", "./");
+  write_index( { "A" => "X.js" }, "Foo::Bar", "./" );
 
 Creates a file index. This allows creation of a map of:
 
@@ -381,7 +420,7 @@ Creates a file index. This allows creation of a map of:
 Entries that will be available in a constructed module as follows:
 
   use Module::Name;
-  $Module::Name::index->{ "Module::Name" } # A String Path
+  $Module::Name::index->{"Module::Name"}    # A String Path
 
 These generated files do B<NOT> have a C<__DATA__> section
 
@@ -403,11 +442,14 @@ Defaults to C<./lib>.
 
 =head2 C<find_and_pack>
 
-  find_and_pack( $root_dir, $namespace_prefix, $libdir ) -> Hash
+  # find_and_pack( $root_dir, $namespace_prefix, $libdir? ) -> Hash
 
 Creates copies of all the contents of C<$root_dir> and constructs
 ( or reconstructs ) the relevant modules using C<$namespace_prefix>
 and stores them in C<$libdir> ( which defaults to C<./lib/> )
+
+B<Since 0.000002>:
+Also generates an "index" file ( See L<< C<write_index>|/write_index >> ) at the name C<$namespace_prefix>.
 
 Returns a hash detailing operations and results:
 
@@ -416,6 +458,8 @@ Returns a hash detailing operations and results:
     unchanged => [ { module => ..., file => ... }, ... ],
     fail      => [ { module => ..., file => ..., error => ... }, ... ],
   }
+
+Index updates will be in above list except with C<< index => 1 >> instead of C<< file => >>
 
 =head3 options:
 
