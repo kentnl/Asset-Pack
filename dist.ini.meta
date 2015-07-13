@@ -23,4 +23,4 @@ filename = LICENSE
 ;authordep Pod::Weaver::Section::Contributors = 0
 
 [Prereqs / TestRecommends]
-App::FatPacker = 0
+App::FatPacker = 0.009017
