@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.000003 2015-07-13T05:40:50Z f70f711
  [BugFix]
  - Don't execute FatPacker interop test with FatPacker < 0.00917
  - Fatpacking itself should still work before this, but its just not practical to test
