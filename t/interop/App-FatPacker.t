@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Requires { "App::FatPacker" => '0.0009017' }; # Minimum required for fatpack_file
+use Test::Requires { "App::FatPacker" => '0.009017' };    # Minimum required for fatpack_file
 use Test::TempDir::Tiny qw( tempdir );
 use Path::Tiny qw( path cwd );
 use Asset::Pack qw( find_and_pack );

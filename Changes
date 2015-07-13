@@ -1,10 +1,12 @@
 Revision history for Asset-Pack
 
-0.000004 2015-07-13T05:56:18Z 8935e0b
+0.000004 2015-07-13T06:11:23Z fcd9a2c
+ [BugFix Bugfix]
+ - Actually resolve the change I claimed to fix in 0.000003 because I can't count '0's.
 
 0.000003 2015-07-13T05:40:50Z f70f711
  [BugFix]
- - Don't execute FatPacker interop test with FatPacker < 0.00917
+ - Don't execute FatPacker interop test with FatPacker < 0.009017
  - Fatpacking itself should still work before this, but its just not practical to test
 
  [Dependencies::Stats]
