@@ -1,6 +1,9 @@
 Revision history for Asset-Pack
 
 0.000003 2015-07-11T05:19:20Z ff40f6e
+ [BugFix]
+ - Don't execute FatPacker interop test with FatPacker < 0.00917
+ - Fatpacking itself should still work before this, but its just not practical to test
 
 0.000002 2015-07-11T05:00:03Z a542c60
  [Features / find_and_pack indexes]
