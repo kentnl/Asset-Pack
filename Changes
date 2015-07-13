@@ -1,5 +1,7 @@
 Revision history for Asset-Pack
 
+0.000004 2015-07-13T05:56:03Z 17a36d6
+
 0.000003 2015-07-13T05:40:50Z f70f711
  [BugFix]
  - Don't execute FatPacker interop test with FatPacker < 0.00917
