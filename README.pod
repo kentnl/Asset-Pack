@@ -8,7 +8,7 @@ Asset::Pack - Easily pack assets into Perl Modules that can be fat-packed
 
 =head1 VERSION
 
-version 0.000003
+version 0.000004
 
 =head1 SYNOPSIS
 

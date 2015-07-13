@@ -1,6 +1,8 @@
 This file contains ALL changes in dependencies in both REQUIRED / OPTIONAL dependencies for all phases (configure/build/runtime/test/develop)
 
-0.000003
+0.000004
+
+0.000003 2015-07-13T05:40:50Z
  [Changed / test recommends]
  - App::FatPacker 0 → 0.009017
 
