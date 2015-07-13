@@ -91,7 +91,7 @@ do { my $x = {
                     },
        'test' => {
                    'recommends' => {
-                                     'App::FatPacker' => '0',
+                                     'App::FatPacker' => '0.009017',
                                      'CPAN::Meta' => '2.120900',
                                      'ExtUtils::MakeMaker' => '7.00',
                                      'Test::More' => '0.99'

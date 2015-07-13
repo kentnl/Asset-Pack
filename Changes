@@ -1,5 +1,14 @@
 Revision history for Asset-Pack
 
+0.000003 2015-07-13T05:40:50Z f70f711
+ [BugFix]
+ - Don't execute FatPacker interop test with FatPacker < 0.00917
+ - Fatpacking itself should still work before this, but its just not practical to test
+
+ [Dependencies::Stats]
+ - Dependencies changed since 0.000002, see misc/*.deps* for details
+ - test: (recommends: ↑1)
+
 0.000002 2015-07-11T05:00:03Z a542c60
  [Features / find_and_pack indexes]
  - find_and_pack now generates the promised pack index as the root namespace.
