@@ -1,6 +1,13 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+ [Dependencies::Stats]
+ - Dependencies changed since 0.000004, see misc/*.deps* for details
+ - test: +3 -1
+
+ [Tests]
+ - Bundling Test::Requires temporarily till upstream re-establish perl 5.6 support in their installer
+   https://github.com/tokuhirom/Test-Requires/issues/11
 
 0.000004 2015-07-13T06:11:23Z fcd9a2c
  [BugFix Bugfix]
