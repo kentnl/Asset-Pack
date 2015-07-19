@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use lib 't/tlib';
 use Test::Requires { "App::FatPacker" => '0.009017' };    # Minimum required for fatpack_file
 use Test::TempDir::Tiny qw( tempdir );
 use Path::Tiny qw( path cwd );
