@@ -127,10 +127,10 @@
    "provides" : {
       "Asset::Pack" : {
          "file" : "lib/Asset/Pack.pm",
-         "version" : "0.000_00"
+         "version" : "0.000005"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "web" : "https://github.com/kentnl/Asset-Pack/issues"
@@ -142,7 +142,7 @@
          "web" : "https://github.com/kentnl/Asset-Pack"
       }
    },
-   "version" : "0.000_00",
+   "version" : "0.000005",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.022000"
@@ -583,7 +583,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : null,
                   "signed" : 0,
-                  "tag" : "0.000_00-source",
+                  "tag" : "0.000005-source",
                   "tag_format" : "%v-source",
                   "tag_message" : "v%v",
                   "time_zone" : "local"
@@ -659,7 +659,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : "releases",
                   "signed" : 0,
-                  "tag" : "0.000_00",
+                  "tag" : "0.000005",
                   "tag_format" : "%v",
                   "tag_message" : "v%v",
                   "time_zone" : "local"
@@ -810,7 +810,7 @@
       "zilla" : {
          "class" : "Dist::Zilla::Dist::Builder",
          "config" : {
-            "is_trial" : "1"
+            "is_trial" : "0"
          },
          "version" : "5.037"
       }

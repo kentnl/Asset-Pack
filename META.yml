@@ -25,7 +25,7 @@ name: Asset-Pack
 provides:
   Asset::Pack:
     file: lib/Asset/Pack.pm
-    version: 0.000_00
+    version: '0.000005'
 requires:
   Data::Dumper: '0'
   Exporter: '0'
@@ -39,4 +39,4 @@ resources:
   bugtracker: https://github.com/kentnl/Asset-Pack/issues
   homepage: https://github.com/kentnl/Asset-Pack
   repository: https://github.com/kentnl/Asset-Pack.git
-version: 0.000_00
+version: '0.000005'
