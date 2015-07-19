@@ -1,6 +1,13 @@
 This file contains changes in REQUIRED dependencies for standard CPAN phases (configure/build/runtime/test)
 
 0.000005
+ [Added / test requires]
+ - Test::Builder::Module
+ - base
+ - lib
+
+ [Removed / test requires]
+ - Test::Requires
 
 0.000004 2015-07-13T06:11:23Z
 
