@@ -129,7 +129,7 @@
    "provides" : {
       "Asset::Pack" : {
          "file" : "lib/Asset/Pack.pm",
-         "version" : "0.000005"
+         "version" : "0.000006"
       }
    },
    "release_status" : "stable",
@@ -144,7 +144,7 @@
          "web" : "https://github.com/kentnl/Asset-Pack"
       }
    },
-   "version" : "0.000005",
+   "version" : "0.000006",
    "x_Dist_Zilla" : {
       "perl" : {
          "version" : "5.022000"
@@ -585,7 +585,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : null,
                   "signed" : 0,
-                  "tag" : "0.000005-source",
+                  "tag" : "0.000006-source",
                   "tag_format" : "%v-source",
                   "tag_message" : "v%v",
                   "time_zone" : "local"
@@ -661,7 +661,7 @@
                "Dist::Zilla::Plugin::Git::Tag" : {
                   "branch" : "releases",
                   "signed" : 0,
-                  "tag" : "0.000005",
+                  "tag" : "0.000006",
                   "tag_format" : "%v",
                   "tag_message" : "v%v",
                   "time_zone" : "local"
