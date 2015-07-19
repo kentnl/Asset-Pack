@@ -19,6 +19,7 @@ my @files = (
     't/internals/pack_asset_binary_large.t',
     't/internals/pack_metadata.t',
     't/interop/App-FatPacker.t',
+    't/tlib/Test/Requires.pm',
     't/write_index.t',
     't/write_module.t',
     't/write_module_binary.t'

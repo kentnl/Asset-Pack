@@ -1,5 +1,14 @@
 Revision history for Asset-Pack
 
+0.000005 2015-07-19T20:45:18Z f2f12fb
+ [Dependencies::Stats]
+ - Dependencies changed since 0.000004, see misc/*.deps* for details
+ - test: +3 -1
+
+ [Tests]
+ - Bundling Test::Requires temporarily till upstream re-establish perl 5.6 support in their installer
+   https://github.com/tokuhirom/Test-Requires/issues/11
+
 0.000004 2015-07-13T06:11:23Z fcd9a2c
  [BugFix Bugfix]
  - Actually resolve the change I claimed to fix in 0.000003 because I can't count '0's.
