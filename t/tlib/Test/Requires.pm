@@ -58,12 +58,12 @@ sub test_requires {
                 exit 0;
             }
         };
-        
+
         my $msg = "$e";
         if ( $e =~ /^Can't locate/ ) {
             $msg = "Test requires module '$mod' but it's not found";
         }
-        
+
         if ($ENV{RELEASE_TESTING}) {
             __PACKAGE__->builder->BAIL_OUT($msg);
         }
@@ -95,7 +95,7 @@ Test::Requires - Checks to see if the module can be loaded
 
     # or
     use Test::More tests => 10;
-    use Test::Requires qw( 
+    use Test::Requires qw(
         HTTP::MobileAttribute
     );
     isa_ok HTTP::MobileAttribute->new, 'HTTP::MobileAttribute::NonMobile';
@@ -115,7 +115,7 @@ If this fails rather than failing tests this B<skips all tests>.
 Test::Requires can also be used to require a minimum version of Perl:
 
     use Test::Requires "5.010";  # quoting is necessary!!
-    
+
     # or
     use Test::Requires "v5.10";
 
