@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.000005 2015-07-19T20:45:18Z f2f12fb
  [Dependencies::Stats]
  - Dependencies changed since 0.000004, see misc/*.deps* for details
  - test: +3 -1
