@@ -1,6 +1,13 @@
 Revision history for Asset-Pack
 
-0.000006 2015-07-19T20:47:40Z 97c34f5
+0.000006 2015-07-21T12:20:27Z 32fad1f
+ [Dependencies::Stats]
+ - Dependencies changed since 0.000005, see misc/*.deps* for details
+ - test: -3
+
+ [Tests]
+ - Undo previous bundling experiment. Upstream are scheduled to potentially ship with 5.6 support, but pragmatically,
+   we don't really need it.
 
 0.000005 2015-07-19T20:45:18Z f2f12fb
  [Dependencies::Stats]
