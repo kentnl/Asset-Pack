@@ -8,8 +8,8 @@ BEGIN {
     'App::FatPacker' => '0.009017'    # Minimum required for fatpack_file
   );
   for my $key ( keys %required ) {
-    next if $ENV{RELEASE_TESTING};
     next if eval "require $key; $key->VERSION( $required{$key} ); 1";
+    next if $ENV{RELEASE_TESTING};
     plan skip_all => "$key version >= $required{$key} required for this test";
     exit 0;
   }
