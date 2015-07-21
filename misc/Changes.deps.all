@@ -1,6 +1,8 @@
 This file contains ALL changes in dependencies in both REQUIRED / OPTIONAL dependencies for all phases (configure/build/runtime/test/develop)
 
-0.000006
+0.000007
+
+0.000006 2015-07-21T13:10:16Z
  [Removed / test requires]
  - Test::Builder::Module
  - base
