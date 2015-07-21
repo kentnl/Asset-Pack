@@ -542,7 +542,7 @@ working install
 =item * C<< SMUELLER/Data-Dumper-2.128.tar.gz >> is newest version of Data::Dumper that
 works on C<5.6.2>, versions C<2.130_03> to C<2.154> presently fail.
 
-=item * C<< OVID/Test-Differences-0.61.tar.gz >> is the newest version of 
+=item * C<< OVID/Test-Differences-0.61.tar.gz >> is the newest version of
 Test::Differences that works on C<5.6.2>, versions C<0.61_01> to C<0.63> presently fail.
 
 =back
