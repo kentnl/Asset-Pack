@@ -2,8 +2,19 @@ use strict;
 use warnings;
 
 use Test::More;
-use lib 't/tlib';
-use Test::Requires { "App::FatPacker" => '0.009017' };    # Minimum required for fatpack_file
+
+BEGIN {
+  my %required = (
+    'App::FatPacker' => '0.009017'    # Minimum required for fatpack_file
+  );
+  for my $key ( keys %required ) {
+    next if $ENV{RELEASE_TESTING};
+    next if eval "require $key; $key->VERSION( $required{$key} ); 1";
+    plan skip_all => "$key version >= $required{$key} required for this test";
+    exit 0;
+  }
+}
+
 use Test::TempDir::Tiny qw( tempdir );
 use Path::Tiny qw( path cwd );
 use Asset::Pack qw( find_and_pack );

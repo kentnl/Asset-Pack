@@ -1,6 +1,13 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+ [Dependencies::Stats]
+ - Dependencies changed since 0.000005, see misc/*.deps* for details
+ - test: -3
+
+ [Tests]
+ - Undo previous bundling experiment. Upstream are scheduled to potentially ship with 5.6 support, but pragmatically,
+   we don't really need it.
 
 0.000005 2015-07-19T20:45:18Z f2f12fb
  [Dependencies::Stats]
