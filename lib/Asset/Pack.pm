@@ -7,7 +7,7 @@ package Asset::Pack;
 use Path::Tiny 0.069 qw( path );    # path()->visit without broken ref returns
 use Try::Tiny qw( try catch );
 
-our $VERSION = '0.000005';
+our $VERSION = '0.000006';
 
 # ABSTRACT: Easily pack assets into Perl Modules that can be fat-packed
 
@@ -336,7 +336,7 @@ Asset::Pack - Easily pack assets into Perl Modules that can be fat-packed
 
 =head1 VERSION
 
-version 0.000005
+version 0.000006
 
 =head1 SYNOPSIS
 
@@ -519,6 +519,43 @@ Whereas C<Asset::Pack> is implemented as a simple C<Perl Module> building utilit
 independent files which will perform like native C<Perl Module>'s when used.
 
 =back
+
+=head1 PERL LEGACY SUPPORT
+
+At present, this distribution only works on C<< Perl >=5.8 >>. ( Though the files it
+B<generates> should work as-is on C<5.6> )
+
+This is mostly due to its dependencies:
+
+=over 4
+
+=item * L<< C<Path::Tiny>|Path::Tiny >> is used extensively for mechanics, but C<Path::Tiny>
+does not presently (Circa C<0.72>) work on C<< Perl <5.8 >>
+(L<< details on C<GitHub>|https://github.com/dagolden/Path-Tiny/issues/145 >>)
+
+=item * L<< C<Test::Differences>|Test::Differences >> is used a fair bit in tests, and
+it won't auto-install on 5.6. But careful selection of dependencies will get you a
+working install
+
+=over 4
+
+=item * C<< SMUELLER/Data-Dumper-2.128.tar.gz >> is newest version of Data::Dumper that
+works on C<5.6.2>, versions C<2.130_03> to C<2.154> presently fail.
+
+=item * C<< OVID/Test-Differences-0.61.tar.gz >> is the newest version of
+Test::Differences that works on C<5.6.2>, versions C<0.61_01> to C<0.63> presently fail.
+
+=back
+
+=item * L<< C<Test::TempDir::Tiny>|Test::TempDir::Tiny >> is used a fair bit in tests as
+well, and as of C<0.005-TRIAL>, C<5.6> support is
+L<< still lacking|https://github.com/dagolden/Test-TempDir-Tiny/issues/9 >>, albeit support is
+L<< intended|https://github.com/dagolden/Test-TempDir-Tiny/commit/bbf9f899ddee1959867e1ad3a4830bea5400f1ef >>
+
+=back
+
+The maintainer of this module will however accept patches to get closer to full 5.6 support where it
+makes sense to, at the request of interested parties.
 
 =head1 AUTHOR
 

@@ -6,13 +6,10 @@ build_requires:
   Cwd: '0'
   ExtUtils::MakeMaker: '0'
   File::Spec: '0'
-  Test::Builder::Module: '0'
   Test::Differences: '0'
   Test::Fatal: '0'
   Test::More: '0.89'
   Test::TempDir::Tiny: '0'
-  base: '0'
-  lib: '0'
   perl: '5.006'
 configure_requires:
   ExtUtils::MakeMaker: '0'
@@ -27,7 +24,7 @@ name: Asset-Pack
 provides:
   Asset::Pack:
     file: lib/Asset/Pack.pm
-    version: '0.000005'
+    version: '0.000006'
 requires:
   Data::Dumper: '0'
   Exporter: '0'
@@ -41,4 +38,4 @@ resources:
   bugtracker: https://github.com/kentnl/Asset-Pack/issues
   homepage: https://github.com/kentnl/Asset-Pack
   repository: https://github.com/kentnl/Asset-Pack.git
-version: '0.000005'
+version: '0.000006'
