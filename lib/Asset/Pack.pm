@@ -7,7 +7,7 @@ package Asset::Pack;
 use Path::Tiny 0.069 qw( path );    # path()->visit without broken ref returns
 use Try::Tiny qw( try catch );
 
-our $VERSION = '0.000006';
+our $VERSION = '0.000007';
 
 # ABSTRACT: Easily pack assets into Perl Modules that can be fat-packed
 
