@@ -531,7 +531,7 @@ This is mostly due to its dependencies:
 
 =item * L<< C<Path::Tiny>|Path::Tiny >> is used extensively for mechanics, but C<Path::Tiny>
 does not presently (Circa C<0.72>) work on C<< Perl <5.8 >>
-(L<< details on github|https://github.com/dagolden/Path-Tiny/issues/145 >>)
+(L<< details on GitHub|https://github.com/dagolden/Path-Tiny/issues/145 >>)
 
 =item * L<< C<Test::Differences>|Test::Differences >> is used a fair bit in tests, and
 it won't auto-install on 5.6. But careful selection of dependencies will get you a
