@@ -1,6 +1,6 @@
 Revision history for Asset-Pack
 
-0.000006 2015-07-21T12:20:27Z 32fad1f
+0.000006 2015-07-21T13:03:56Z f8f5209
  [Dependencies::Stats]
  - Dependencies changed since 0.000005, see misc/*.deps* for details
  - test: -3
