@@ -547,7 +547,7 @@ Test::Differences that works on C<5.6.2>, versions C<0.61_01> to C<0.63> present
 
 =back
 
-=item * L<< C<Test::TempDir::Tiny>|Test::TempDir::Tiny >> is used a fail bit in tests as
+=item * L<< C<Test::TempDir::Tiny>|Test::TempDir::Tiny >> is used a fair bit in tests as
 well, and as of C<0.005-TRIAL>, C<5.6> support is
 L<< still lacking|https://github.com/dagolden/Test-TempDir-Tiny/issues/9 >>, albeit support is
 L<< intended|https://github.com/dagolden/Test-TempDir-Tiny/commit/bbf9f899ddee1959867e1ad3a4830bea5400f1ef >>

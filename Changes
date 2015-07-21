@@ -5,6 +5,9 @@ Revision history for Asset-Pack
  - Dependencies changed since 0.000005, see misc/*.deps* for details
  - test: -3
 
+ [Documentation]
+ - Document current state of perl version support
+
  [Tests]
  - Undo previous bundling experiment. Upstream are scheduled to potentially ship with 5.6 support, but pragmatically,
    we don't really need it.
