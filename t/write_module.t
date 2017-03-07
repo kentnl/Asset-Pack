@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 3 * 2;
 
 use 5.006;
 use Path::Tiny;
@@ -25,5 +25,3 @@ foreach my $p ( keys %paths ) {
     eq_or_diff( ${"$paths{$p}::content"}, $content, "Loaded and decoded copy of $p" );
   }
 }
-
-done_testing;

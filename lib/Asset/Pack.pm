@@ -7,7 +7,7 @@ package Asset::Pack;
 use Path::Tiny 0.069 qw( path );    # path()->visit without broken ref returns
 use Try::Tiny qw( try catch );
 
-our $VERSION = '0.000006';
+our $VERSION = '0.000007';
 
 # ABSTRACT: Easily pack assets into Perl Modules that can be fat-packed
 
@@ -336,7 +336,7 @@ Asset::Pack - Easily pack assets into Perl Modules that can be fat-packed
 
 =head1 VERSION
 
-version 0.000006
+version 0.000007
 
 =head1 SYNOPSIS
 
@@ -569,7 +569,7 @@ Kent Fredric <kentnl@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by James Laver on time generously donated by Anomalio.
+This software is copyright (c) 2017 by James Laver on time generously donated by Anomalio.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
