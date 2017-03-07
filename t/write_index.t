@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 2;
 use Asset::Pack qw( write_index );
 use Test::TempDir::Tiny;
 use Test::Fatal qw( exception );
@@ -19,5 +19,3 @@ my $code = write_index( $sample, 'Test::X::Index', "$temp/lib" );
 unshift @INC, "$temp/lib";
 use_ok("Test::X::Index");
 is_deeply( $sample, do { no warnings 'once'; $Test::X::Index::index }, "Stored index resurrected from disk intact" );
-
-done_testing;

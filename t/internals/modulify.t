@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 1;
 use Asset::Pack;
 
 *modulify = \&Asset::Pack::_modulify;
@@ -9,6 +9,3 @@ use Asset::Pack;
 # ABSTRACT: A test for modulify
 
 is( modulify( 'example.js', 'Prefix' ), 'Prefix::examplejs', "Modulify strips dots" );
-
-done_testing;
-
