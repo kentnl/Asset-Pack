@@ -1,5 +1,7 @@
 Revision history for Asset-Pack
 
+0.000008 2017-03-07T11:27:25Z 4a8d336
+
 0.000007 2017-03-07T11:25:49Z b702db9
  - Bugfix: Avoid failing tests under -Ddefault_inc_excludes_dot
  - Tests made portable on older Test::More's
