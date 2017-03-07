@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More;
 
 BEGIN {
   my %required = (
@@ -13,6 +13,7 @@ BEGIN {
     plan skip_all => "$key version >= $required{$key} required for this test";
     exit 0;
   }
+  plan tests => 3
 }
 
 use Test::TempDir::Tiny qw( tempdir );
