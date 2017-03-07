@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 11;
 use Path::Tiny qw( path );
 use Test::TempDir::Tiny qw( tempdir );
 
@@ -43,5 +43,3 @@ cmp_ok( scalar @{ $layout->{fail} },      '==', 0, "No errors found" );
 cmp_ok( scalar @{ $layout->{unchanged} }, '==', 2, "One unchanged files" );
 
 is( $layout->{unchanged}->[0]->{module}, 'Test::X::FindAndPack::examplejs', "unchanged package renamed correctly" );
-
-done_testing;

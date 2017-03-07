@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 3;
 
 BEGIN {
   my %required = (
@@ -65,6 +65,3 @@ ok( do "$target", "Sourcing fatpacked script works" );
 can_ok( 'myscript', 'value' );
 
 is( myscript->value, path( $temp, 'assets', 'example.js' )->slurp_raw(), "Content from fatpacked script ok" );
-
-done_testing;
-

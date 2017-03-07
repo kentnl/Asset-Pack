@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More;
+use Test::More tests => 3 * 2;
 
 use Asset::Pack;
 
@@ -20,6 +20,3 @@ foreach my $k ( keys %names ) {
     is( $fp, $p . $names{$k}, "$k resolves to the full path as it should" );
   }
 }
-
-done_testing;
-
