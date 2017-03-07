@@ -1,6 +1,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.000008 2017-03-07T13:25:07Z a58e4fc
  - Bugfix: Stop accidentally calling plan() twice in App::FatPacker interop test
 
 0.000007 2017-03-07T11:25:49Z b702db9
